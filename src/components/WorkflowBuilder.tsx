@@ -688,7 +688,7 @@ export const WorkflowBuilder = ({
                       if (onFixNode) {
                         onFixNode(issue.nodeId, issue.fieldKey);
                       } else {
-                        setSelectedNodeId(issue.nodeId);
+                        setSelectedNodeId(issue.nodeId ?? null);
                         setActivePanel("settings");
                       }
                     }}
