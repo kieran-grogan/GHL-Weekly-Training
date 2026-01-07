@@ -1,4 +1,5 @@
 import { NODE_CATALOG } from "@/lib/nodeCatalog";
+import type { NodeType } from "@/lib/workflowTypes";
 import type {
   Scenario,
   ScenarioBundle,
@@ -78,7 +79,7 @@ const lintScenario = (scenario: Scenario, prefix: string): ScenarioLintIssue[] =
 
   scenario.requirements.forEach((requirement, index) => {
     requirementNodeTypes(requirement).forEach((type) => {
-      if (!validNodeTypes.has(type)) {
+      if (!validNodeTypes.has(type as NodeType)) {
         issues.push({
           level: "error",
           path: `${prefix}.requirements[${index}]`,
