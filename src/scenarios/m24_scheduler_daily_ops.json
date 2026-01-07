@@ -1,0 +1,84 @@
+{
+  "id": "m24_scheduler_daily_ops",
+  "moduleId": "M24",
+  "title": "M24: Daily Ops Checklist (Scheduler)",
+  "phase": 6,
+  "estimatedMinutes": 16,
+  "objectives": [
+    "Build a contactless scheduler workflow.",
+    "Create daily ops tasks automatically.",
+    "Send internal notifications from system runs."
+  ],
+  "allowedNodes": {
+    "triggers": [
+      "scheduler.daily"
+    ],
+    "actions": [
+      "task.create",
+      "user.notify"
+    ],
+    "logic": []
+  },
+  "requirements": [
+    {
+      "type": "triggerIs",
+      "value": "scheduler.daily"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "task.create"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "user.notify"
+    }
+  ],
+  "testCases": [
+    {
+      "name": "Scheduler run",
+      "event": {
+        "type": "scheduler.daily"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {}
+      },
+      "expect": {
+        "systemTasksCreated": [
+          {
+            "contains": [
+              "prospect list"
+            ]
+          }
+        ],
+        "systemNotifications": [
+          {
+            "contains": [
+              "Daily ops"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "teachBackPrompt": "Explain what a scheduler workflow is and why it is different from contact-triggered automations.",
+  "hints": [
+    {
+      "level": 1,
+      "text": "Use the Schedule trigger (system run) instead of a contact trigger."
+    },
+    {
+      "level": 2,
+      "text": "Ensure the test run outputs systemTasksCreated and systemNotifications."
+    }
+  ],
+  "adminNotes": {
+    "acceptableVariants": [
+      "Add a webhook send to an external list-builder service."
+    ],
+    "commonMistakes": [
+      "Trying to send SMS or email without a contact context.",
+      "Scheduler module not supported by test run engine."
+    ]
+  }
+}

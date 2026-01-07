@@ -1,0 +1,143 @@
+{
+  "id": "m19_router_workflow",
+  "moduleId": "M19",
+  "title": "M19: Intake Router: Decide What Happens Next",
+  "phase": 5,
+  "estimatedMinutes": 22,
+  "objectives": [
+    "Route leads based on lead_source.",
+    "Handle missing contact info with escalation.",
+    "Use route tags as workflow handoffs."
+  ],
+  "allowedNodes": {
+    "triggers": [
+      "form.submitted"
+    ],
+    "actions": [
+      "tag.add",
+      "task.create",
+      "user.notify"
+    ],
+    "logic": [
+      "ifElse"
+    ]
+  },
+  "requirements": [
+    {
+      "type": "triggerIs",
+      "value": "form.submitted"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "tag.add"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "task.create"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "user.notify"
+    },
+    {
+      "type": "mustContainIfElse",
+      "minCount": 1
+    }
+  ],
+  "testCases": [
+    {
+      "name": "Facebook lead with email",
+      "event": {
+        "type": "form.submitted",
+        "formName": "Lead Form"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "lead_source": "Facebook",
+          "email": "a@a.com"
+        }
+      },
+      "expect": {
+        "tagsAdded": [
+          "stage:new",
+          "route:nurture_fb"
+        ]
+      }
+    },
+    {
+      "name": "Google lead with phone",
+      "event": {
+        "type": "form.submitted",
+        "formName": "Lead Form"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "lead_source": "Google",
+          "phone": "+1555"
+        }
+      },
+      "expect": {
+        "tagsAdded": [
+          "stage:new",
+          "route:nurture_general"
+        ]
+      }
+    },
+    {
+      "name": "Missing email and phone",
+      "event": {
+        "type": "form.submitted",
+        "formName": "Lead Form"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "lead_source": "Facebook"
+        }
+      },
+      "expect": {
+        "tasksCreated": [
+          {
+            "contains": [
+              "missing contact info"
+            ]
+          }
+        ],
+        "notifications": [
+          {
+            "contains": [
+              "missing contact info"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "teachBackPrompt": "Explain the router pattern, what routes it creates, and why the missing-info path exists.",
+  "hints": [
+    {
+      "level": 1,
+      "text": "Start by tagging stage:new, then decide if enough contact info exists."
+    },
+    {
+      "level": 2,
+      "text": "If OR is not supported, nest If/Else checks for email and phone."
+    },
+    {
+      "level": 3,
+      "text": "Use distinct route tags: route:nurture_fb vs route:nurture_general."
+    }
+  ],
+  "adminNotes": {
+    "acceptableVariants": [
+      "Notify user on successful route as well."
+    ],
+    "commonMistakes": [
+      "Routing everyone even when contact info is missing.",
+      "Missing lead_source branching.",
+      "No missing-info escalation path."
+    ]
+  }
+}

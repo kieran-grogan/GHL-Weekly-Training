@@ -1,0 +1,125 @@
+{
+  "id": "m17_stage_won_onboarding",
+  "moduleId": "M17",
+  "title": "M17: Deal Won: Start Onboarding",
+  "phase": 4,
+  "estimatedMinutes": 20,
+  "objectives": [
+    "Transition deals from sales to onboarding.",
+    "Update lifecycle state with tags and fields.",
+    "Coordinate internal handoff tasks and notifications."
+  ],
+  "allowedNodes": {
+    "triggers": [
+      "opportunity.stageChanged"
+    ],
+    "actions": [
+      "tag.add",
+      "field.update",
+      "email.send",
+      "task.create",
+      "user.notify"
+    ],
+    "logic": []
+  },
+  "requirements": [
+    {
+      "type": "triggerIs",
+      "value": "opportunity.stageChanged"
+    },
+    {
+      "type": "triggerConfigEquals",
+      "field": "stageName",
+      "value": "Won"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "tag.add"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "field.update"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "email.send"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "task.create"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "user.notify"
+    }
+  ],
+  "testCases": [
+    {
+      "name": "Deal won",
+      "event": {
+        "type": "opportunity.stageChanged",
+        "stageName": "Won",
+        "pipelineName": "Sales"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "email": "w@w.com"
+        }
+      },
+      "expect": {
+        "tagsAdded": [
+          "stage:won"
+        ],
+        "fieldsEqual": [
+          {
+            "fieldKey": "customer_type",
+            "value": "Customer"
+          }
+        ],
+        "messages": [
+          {
+            "channel": "email",
+            "contains": [
+              "Welcome"
+            ]
+          }
+        ],
+        "tasksCreated": [
+          {
+            "contains": [
+              "fulfillment"
+            ]
+          }
+        ],
+        "notifications": [
+          {
+            "contains": [
+              "Deal won"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "teachBackPrompt": "Explain how this workflow changes the lifecycle from prospecting to onboarding and why it includes both customer and internal actions.",
+  "hints": [
+    {
+      "level": 1,
+      "text": "Start with stageName Won. Then set state (tag/field) before sending welcome."
+    },
+    {
+      "level": 2,
+      "text": "Ensure the task title includes fulfillment or onboarding wording."
+    }
+  ],
+  "adminNotes": {
+    "acceptableVariants": [
+      "Notify user before creating task."
+    ],
+    "commonMistakes": [
+      "Sending welcome email but not updating state.",
+      "Missing internal ops task or notification."
+    ]
+  }
+}

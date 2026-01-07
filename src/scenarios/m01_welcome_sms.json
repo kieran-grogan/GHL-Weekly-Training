@@ -1,0 +1,81 @@
+{
+  "id": "m01_welcome_sms",
+  "moduleId": "M01",
+  "title": "M01: Send a Welcome Text to a New Lead",
+  "phase": 1,
+  "estimatedMinutes": 12,
+  "objectives": [
+    "Distinguish trigger, action, and logic steps.",
+    "Build a single path workflow from start to end.",
+    "Use test run logs to verify outcomes."
+  ],
+  "allowedNodes": {
+    "triggers": [
+      "contact.created"
+    ],
+    "actions": [
+      "sms.send"
+    ],
+    "logic": []
+  },
+  "requirements": [
+    {
+      "type": "triggerIs",
+      "value": "contact.created"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "sms.send"
+    }
+  ],
+  "testCases": [
+    {
+      "name": "New contact created",
+      "event": {
+        "type": "contact.created"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "first_name": "Sam",
+          "phone": "+15551234567"
+        }
+      },
+      "expect": {
+        "messages": [
+          {
+            "channel": "sms",
+            "contains": [
+              "Welcome"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "teachBackPrompt": "Explain what triggers this workflow, what message is sent, and how you would verify it worked.",
+  "hints": [
+    {
+      "level": 1,
+      "text": "Start with the Contact Created trigger and connect it directly to Send SMS."
+    },
+    {
+      "level": 2,
+      "text": "If check fails, check the SMS body field is not empty and includes the word 'Welcome'."
+    },
+    {
+      "level": 3,
+      "text": "Run the test run for the test case and confirm the SMS shows in the timeline log."
+    }
+  ],
+  "adminNotes": {
+    "acceptableVariants": [
+      "Add a tag like log:welcome_sent after sending SMS."
+    ],
+    "commonMistakes": [
+      "SMS step exists but not connected to the trigger.",
+      "SMS body is blank.",
+      "No end of path."
+    ]
+  }
+}

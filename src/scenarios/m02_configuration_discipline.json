@@ -1,0 +1,131 @@
+{
+  "id": "m02_configuration_discipline",
+  "moduleId": "M02",
+  "title": "M02: New Lead Setup: Tag + Email + Text",
+  "phase": 1,
+  "estimatedMinutes": 14,
+  "objectives": [
+    "Chain actions in a deliberate order.",
+    "Configure email and SMS minimum fields.",
+    "Set state before outbound messaging."
+  ],
+  "allowedNodes": {
+    "triggers": [
+      "contact.created"
+    ],
+    "actions": [
+      "tag.add",
+      "email.send",
+      "sms.send"
+    ],
+    "logic": []
+  },
+  "requirements": [
+    {
+      "type": "triggerIs",
+      "value": "contact.created"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "tag.add"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "email.send"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "sms.send"
+    },
+    {
+      "type": "nodeConfigRequired",
+      "nodeType": "tag.add",
+      "fields": [
+        "tag"
+      ]
+    },
+    {
+      "type": "nodeConfigRequired",
+      "nodeType": "email.send",
+      "fields": [
+        "subject",
+        "body"
+      ]
+    },
+    {
+      "type": "nodeConfigRequired",
+      "nodeType": "sms.send",
+      "fields": [
+        "body"
+      ]
+    },
+    {
+      "type": "nodeOrder",
+      "sequence": [
+        "tag.add",
+        "email.send",
+        "sms.send"
+      ]
+    }
+  ],
+  "testCases": [
+    {
+      "name": "Contact created has email + phone",
+      "event": {
+        "type": "contact.created"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "first_name": "Ava",
+          "email": "ava@example.com",
+          "phone": "+15550001111"
+        }
+      },
+      "expect": {
+        "tagsAdded": [
+          "stage:new"
+        ],
+        "messages": [
+          {
+            "channel": "email",
+            "contains": [
+              "Welcome"
+            ]
+          },
+          {
+            "channel": "sms",
+            "contains": [
+              "Welcome"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "teachBackPrompt": "Explain why the tag is added before messages, and what would break if the email/SMS configuration is missing.",
+  "hints": [
+    {
+      "level": 1,
+      "text": "Your workflow needs three actions in order: Add Contact Tag -> Send Email -> Send SMS."
+    },
+    {
+      "level": 2,
+      "text": "If email check fails, check both subject and body are filled."
+    },
+    {
+      "level": 3,
+      "text": "Use test run logs to verify the tag was added before messages were emitted."
+    }
+  ],
+  "adminNotes": {
+    "acceptableVariants": [
+      "Add end immediately after the last message."
+    ],
+    "commonMistakes": [
+      "Forgetting email subject or body.",
+      "Placing Add Contact Tag after messages.",
+      "Leaving SMS body without the required keyword."
+    ]
+  }
+}

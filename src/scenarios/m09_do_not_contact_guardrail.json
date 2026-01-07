@@ -1,0 +1,110 @@
+{
+  "id": "m09_do_not_contact_guardrail",
+  "moduleId": "M09",
+  "title": "M09: Do Not Contact: end Messages",
+  "phase": 2,
+  "estimatedMinutes": 16,
+  "objectives": [
+    "Add a compliance guardrail at the top of the workflow.",
+    "Use end paths to block outbound messaging.",
+    "Verify safe behavior with negative test cases."
+  ],
+  "allowedNodes": {
+    "triggers": [
+      "contact.tagAdded"
+    ],
+    "actions": [
+      "email.send"
+    ],
+    "logic": [
+      "ifElse"
+    ]
+  },
+  "requirements": [
+    {
+      "type": "triggerIs",
+      "value": "contact.tagAdded"
+    },
+    {
+      "type": "triggerConfigEquals",
+      "field": "tag",
+      "value": "stage:new"
+    },
+    {
+      "type": "mustContainIfElse",
+      "minCount": 1
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "email.send"
+    }
+  ],
+  "testCases": [
+    {
+      "name": "Contact flagged do-not-contact",
+      "event": {
+        "type": "contact.tagAdded",
+        "tag": "stage:new"
+      },
+      "initialState": {
+        "tags": [
+          "status:do-not-contact"
+        ],
+        "fields": {
+          "email": "x@example.com"
+        }
+      },
+      "expect": {
+        "messages": []
+      }
+    },
+    {
+      "name": "Normal contact",
+      "event": {
+        "type": "contact.tagAdded",
+        "tag": "stage:new"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "email": "x@example.com"
+        }
+      },
+      "expect": {
+        "messages": [
+          {
+            "channel": "email",
+            "contains": [
+              "Allowed"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "teachBackPrompt": "Explain what the end path accomplishes and why it must occur before any send actions.",
+  "hints": [
+    {
+      "level": 1,
+      "text": "Put If/Else immediately after trigger. Condition: tagExists status:do-not-contact."
+    },
+    {
+      "level": 2,
+      "text": "Ensure the True branch contains only end and no send actions."
+    },
+    {
+      "level": 3,
+      "text": "If TC1 sends an email, your guardrail check is missing or reversed."
+    }
+  ],
+  "adminNotes": {
+    "acceptableVariants": [
+      "Add an internal-only notify action before Endping."
+    ],
+    "commonMistakes": [
+      "Guardrail check placed after messaging.",
+      "Checking wrong tag name.",
+      "Else branch missing."
+    ]
+  }
+}

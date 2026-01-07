@@ -1,0 +1,114 @@
+{
+  "id": "m06_if_else_guardrail",
+  "moduleId": "M06",
+  "title": "M06: If They Have a Phone: Text Otherwise Email",
+  "phase": 2,
+  "estimatedMinutes": 18,
+  "objectives": [
+    "Use If/Else to create mutually exclusive paths.",
+    "Check for phone existence before sending SMS.",
+    "Provide a safe fallback email path."
+  ],
+  "allowedNodes": {
+    "triggers": [
+      "contact.created"
+    ],
+    "actions": [
+      "sms.send",
+      "email.send"
+    ],
+    "logic": [
+      "ifElse"
+    ]
+  },
+  "requirements": [
+    {
+      "type": "triggerIs",
+      "value": "contact.created"
+    },
+    {
+      "type": "mustContainIfElse",
+      "minCount": 1
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "sms.send"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "email.send"
+    }
+  ],
+  "testCases": [
+    {
+      "name": "Contact has phone",
+      "event": {
+        "type": "contact.created"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "phone": "+15551230000",
+          "email": "t@example.com"
+        }
+      },
+      "expect": {
+        "messages": [
+          {
+            "channel": "sms",
+            "contains": [
+              "Welcome"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Contact has no phone",
+      "event": {
+        "type": "contact.created"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "email": "t@example.com"
+        }
+      },
+      "expect": {
+        "messages": [
+          {
+            "channel": "email",
+            "contains": [
+              "Welcome"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "teachBackPrompt": "Explain why this workflow uses If/Else and how it prevents a common automation failure.",
+  "hints": [
+    {
+      "level": 1,
+      "text": "Use an If/Else step after the trigger with condition: field exists phone."
+    },
+    {
+      "level": 2,
+      "text": "Connect both True and Else outputs and end each in end."
+    },
+    {
+      "level": 3,
+      "text": "If TC1 fails, check SMS is on the True branch; if TC2 fails, check Email is on Else."
+    }
+  ],
+  "adminNotes": {
+    "acceptableVariants": [
+      "Add a tag like log:welcome_sent_sms or log:welcome_sent_email in each branch."
+    ],
+    "commonMistakes": [
+      "Else path not connected.",
+      "Using fieldEquals on phone instead of fieldExists.",
+      "Placing both SMS and Email on the same branch."
+    ]
+  }
+}

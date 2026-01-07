@@ -1,0 +1,146 @@
+{
+  "id": "m08_multi_branch_segmentation",
+  "moduleId": "M08",
+  "title": "M08: Facebook vs Google vs Other (3 Paths)",
+  "phase": 2,
+  "estimatedMinutes": 18,
+  "objectives": [
+    "Create multiple ordered branches in If/Else.",
+    "Use Else as a safe fallback.",
+    "Differentiate outputs by segment."
+  ],
+  "allowedNodes": {
+    "triggers": [
+      "contact.tagAdded"
+    ],
+    "actions": [
+      "email.send"
+    ],
+    "logic": [
+      "ifElse"
+    ]
+  },
+  "requirements": [
+    {
+      "type": "triggerIs",
+      "value": "contact.tagAdded"
+    },
+    {
+      "type": "triggerConfigEquals",
+      "field": "tag",
+      "value": "stage:new"
+    },
+    {
+      "type": "mustContainIfElse",
+      "minCount": 1
+    },
+    {
+      "type": "branchCountAtLeast",
+      "nodeType": "ifElse",
+      "count": 2
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "email.send"
+    }
+  ],
+  "testCases": [
+    {
+      "name": "Facebook",
+      "event": {
+        "type": "contact.tagAdded",
+        "tag": "stage:new"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "lead_source": "Facebook",
+          "email": "a@example.com"
+        }
+      },
+      "expect": {
+        "messages": [
+          {
+            "channel": "email",
+            "contains": [
+              "FB Path"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Google",
+      "event": {
+        "type": "contact.tagAdded",
+        "tag": "stage:new"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "lead_source": "Google",
+          "email": "b@example.com"
+        }
+      },
+      "expect": {
+        "messages": [
+          {
+            "channel": "email",
+            "contains": [
+              "Google Path"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Other",
+      "event": {
+        "type": "contact.tagAdded",
+        "tag": "stage:new"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "lead_source": "Referral",
+          "email": "c@example.com"
+        }
+      },
+      "expect": {
+        "messages": [
+          {
+            "channel": "email",
+            "contains": [
+              "Other Path"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "teachBackPrompt": "Explain why branch order matters and what the Else branch protects you from.",
+  "hints": [
+    {
+      "level": 1,
+      "text": "Add multiple branches to If/Else: Facebook, then Google, then Else."
+    },
+    {
+      "level": 2,
+      "text": "Ensure each branch sends a distinct email subject."
+    },
+    {
+      "level": 3,
+      "text": "If TC3 fails, your Else branch may not be enabled or connected."
+    }
+  ],
+  "adminNotes": {
+    "acceptableVariants": [
+      "Use tags per branch instead of sending different emails, with distinct outcomes."
+    ],
+    "commonMistakes": [
+      "Else branch disabled or unconnected.",
+      "Branch conditions swapped causing wrong messages.",
+      "Same email subject across branches."
+    ]
+  }
+}

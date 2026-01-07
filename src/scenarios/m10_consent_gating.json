@@ -1,0 +1,118 @@
+{
+  "id": "m10_consent_gating",
+  "moduleId": "M10",
+  "title": "M10: Consent Check: Only Text if Allowed",
+  "phase": 2,
+  "estimatedMinutes": 18,
+  "objectives": [
+    "Gate SMS by consent fields.",
+    "Provide an email fallback path.",
+    "Avoid sending through the wrong channel."
+  ],
+  "allowedNodes": {
+    "triggers": [
+      "contact.tagAdded"
+    ],
+    "actions": [
+      "sms.send",
+      "email.send"
+    ],
+    "logic": [
+      "ifElse"
+    ]
+  },
+  "requirements": [
+    {
+      "type": "triggerIs",
+      "value": "contact.tagAdded"
+    },
+    {
+      "type": "triggerConfigEquals",
+      "field": "tag",
+      "value": "stage:new"
+    },
+    {
+      "type": "mustContainIfElse",
+      "minCount": 1
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "sms.send"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "email.send"
+    }
+  ],
+  "testCases": [
+    {
+      "name": "consent_sms true",
+      "event": {
+        "type": "contact.tagAdded",
+        "tag": "stage:new"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "consent_sms": true,
+          "phone": "+15550111",
+          "email": "a@a.com"
+        }
+      },
+      "expect": {
+        "messages": [
+          {
+            "channel": "sms",
+            "contains": [
+              "Texting you"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "consent_sms false",
+      "event": {
+        "type": "contact.tagAdded",
+        "tag": "stage:new"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "consent_sms": false,
+          "email": "a@a.com"
+        }
+      },
+      "expect": {
+        "messages": [
+          {
+            "channel": "email",
+            "contains": [
+              "Emailing you"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "teachBackPrompt": "Explain consent gating and how this workflow prevents incorrect channel usage.",
+  "hints": [
+    {
+      "level": 1,
+      "text": "Condition should be field consent_sms equals true."
+    },
+    {
+      "level": 2,
+      "text": "Use distinct words in SMS vs Email so test cases can detect which branch ran."
+    }
+  ],
+  "adminNotes": {
+    "acceptableVariants": [
+      "Add a tag like log:sent_sms or log:sent_email after the send."
+    ],
+    "commonMistakes": [
+      "Using tagExists for consent when consent is stored as a field.",
+      "Reversing the boolean check."
+    ]
+  }
+}

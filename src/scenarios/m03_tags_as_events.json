@@ -1,0 +1,130 @@
+{
+  "id": "m03_tags_as_events",
+  "moduleId": "M03",
+  "title": "M03: When a Tag is Added: Tell the Team + Create a Task",
+  "phase": 1,
+  "estimatedMinutes": 14,
+  "objectives": [
+    "Use tag-added triggers to kick off automation.",
+    "Connect internal notifications and tasks.",
+    "Advance lifecycle tags after human follow-up."
+  ],
+  "allowedNodes": {
+    "triggers": [
+      "contact.tagAdded"
+    ],
+    "actions": [
+      "user.notify",
+      "task.create",
+      "tag.add"
+    ],
+    "logic": []
+  },
+  "requirements": [
+    {
+      "type": "triggerIs",
+      "value": "contact.tagAdded"
+    },
+    {
+      "type": "triggerConfigEquals",
+      "field": "tag",
+      "value": "stage:new"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "user.notify"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "task.create"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "tag.add"
+    },
+    {
+      "type": "nodeOrder",
+      "sequence": [
+        "user.notify",
+        "task.create",
+        "tag.add"
+      ]
+    }
+  ],
+  "testCases": [
+    {
+      "name": "stage:new tag applied",
+      "event": {
+        "type": "contact.tagAdded",
+        "tag": "stage:new"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "first_name": "Kai"
+        }
+      },
+      "expect": {
+        "notifications": [
+          {
+            "contains": [
+              "New lead"
+            ]
+          }
+        ],
+        "tasksCreated": [
+          {
+            "contains": [
+              "Follow up"
+            ]
+          }
+        ],
+        "tagsAdded": [
+          "stage:contacted"
+        ]
+      }
+    },
+    {
+      "name": "Different tag applied",
+      "event": {
+        "type": "contact.tagAdded",
+        "tag": "other"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "first_name": "Kai"
+        }
+      },
+      "expect": {
+        "notifications": [],
+        "tasksCreated": []
+      }
+    }
+  ],
+  "teachBackPrompt": "Explain how tag-based triggers enable modular automation systems and what this workflow accomplishes operationally.",
+  "hints": [
+    {
+      "level": 1,
+      "text": "Set the Tag Added trigger to the exact tag name: stage:new."
+    },
+    {
+      "level": 2,
+      "text": "Make sure the notify and task steps are connected in the main path."
+    },
+    {
+      "level": 3,
+      "text": "If TC2 fails, your trigger filter may be missing or incorrect."
+    }
+  ],
+  "adminNotes": {
+    "acceptableVariants": [
+      "Add an extra tag like log:followup_task_created for auditing."
+    ],
+    "commonMistakes": [
+      "Trigger tag filter is empty (fires for all tags).",
+      "Task title left blank.",
+      "Notify configured to wrong channel or empty recipient."
+    ]
+  }
+}

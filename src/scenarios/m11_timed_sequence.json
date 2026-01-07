@@ -1,0 +1,106 @@
+{
+  "id": "m11_timed_sequence",
+  "moduleId": "M11",
+  "title": "M11: 2-Step Follow-up With a Delay",
+  "phase": 3,
+  "estimatedMinutes": 18,
+  "objectives": [
+    "Insert waits between touches.",
+    "Advance time in test run.",
+    "Build a simple two-touch sequence."
+  ],
+  "allowedNodes": {
+    "triggers": [
+      "contact.tagAdded"
+    ],
+    "actions": [
+      "email.send"
+    ],
+    "logic": [
+      "wait.duration"
+    ]
+  },
+  "requirements": [
+    {
+      "type": "triggerIs",
+      "value": "contact.tagAdded"
+    },
+    {
+      "type": "triggerConfigEquals",
+      "field": "tag",
+      "value": "stage:contacted"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "wait.duration"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "email.send"
+    },
+    {
+      "type": "nodeOrder",
+      "sequence": [
+        "email.send",
+        "wait.duration",
+        "email.send"
+      ]
+    }
+  ],
+  "testCases": [
+    {
+      "name": "Sequence runs with time advance",
+      "event": {
+        "type": "contact.tagAdded",
+        "tag": "stage:contacted"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "email": "seq@example.com"
+        }
+      },
+      "expect": {
+        "messages": [
+          {
+            "channel": "email",
+            "contains": [
+              "Touch 1"
+            ]
+          },
+          {
+            "channel": "email",
+            "contains": [
+              "Touch 2"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "teachBackPrompt": "Explain how the wait works and how you would test it using test run controls.",
+  "hints": [
+    {
+      "level": 1,
+      "text": "Place a Wait step between the first and second email."
+    },
+    {
+      "level": 2,
+      "text": "If only Touch 1 appears, advance time in test run to pass the wait."
+    },
+    {
+      "level": 3,
+      "text": "Use a duration of at least 1 hour to satisfy the validator rule."
+    }
+  ],
+  "adminNotes": {
+    "acceptableVariants": [
+      "Use SMS for Touch 2 if consent is present."
+    ],
+    "commonMistakes": [
+      "No wait between messages.",
+      "Wait placed after the second message.",
+      "Second message not connected after the wait."
+    ]
+  }
+}

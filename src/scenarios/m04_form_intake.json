@@ -1,0 +1,111 @@
+{
+  "id": "m04_form_intake",
+  "moduleId": "M04",
+  "title": "M04: Form Submitted: Save Info + Alert the Team",
+  "phase": 1,
+  "estimatedMinutes": 16,
+  "objectives": [
+    "Capture form submissions with structured data.",
+    "Tag new leads and update lead_source.",
+    "Alert ops immediately with tasks and notifications."
+  ],
+  "allowedNodes": {
+    "triggers": [
+      "form.submitted"
+    ],
+    "actions": [
+      "tag.add",
+      "field.update",
+      "task.create",
+      "user.notify"
+    ],
+    "logic": []
+  },
+  "requirements": [
+    {
+      "type": "triggerIs",
+      "value": "form.submitted"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "tag.add"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "field.update"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "task.create"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "user.notify"
+    }
+  ],
+  "testCases": [
+    {
+      "name": "Contact Us form submitted",
+      "event": {
+        "type": "form.submitted",
+        "formName": "Contact Us"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "email": "lead@example.com"
+        }
+      },
+      "expect": {
+        "tagsAdded": [
+          "stage:new"
+        ],
+        "fieldsEqual": [
+          {
+            "fieldKey": "lead_source",
+            "value": "Website Form"
+          }
+        ],
+        "tasksCreated": [
+          {
+            "contains": [
+              "website"
+            ]
+          }
+        ],
+        "notifications": [
+          {
+            "contains": [
+              "form submission"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "teachBackPrompt": "Explain what structured data this workflow saves and how that helps later automations.",
+  "hints": [
+    {
+      "level": 1,
+      "text": "Use Form Submitted as the trigger and the field key lead_source."
+    },
+    {
+      "level": 2,
+      "text": "If field check fails, check spelling and case of the field key."
+    },
+    {
+      "level": 3,
+      "text": "Use test run to confirm the field update appears in final state."
+    }
+  ],
+  "adminNotes": {
+    "acceptableVariants": [
+      "Notify before task creation (still acceptable if both occur)."
+    ],
+    "commonMistakes": [
+      "Using Contact Created instead of Form Submitted.",
+      "Field key typo (leadSource vs lead_source).",
+      "No tag added for later routing."
+    ]
+  }
+}

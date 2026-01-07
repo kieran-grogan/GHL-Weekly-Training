@@ -1,0 +1,164 @@
+{
+  "id": "m22_booking_assist",
+  "moduleId": "M22",
+  "title": "M22: Booking Helper: Follow Up Then Escalate",
+  "phase": 5,
+  "estimatedMinutes": 20,
+  "objectives": [
+    "Send booking assistance with follow-up.",
+    "Escalate to a human when not booked.",
+    "end escalation when stage:booked exists."
+  ],
+  "allowedNodes": {
+    "triggers": [
+      "contact.tagAdded"
+    ],
+    "actions": [
+      "tag.remove",
+      "email.send",
+      "task.create",
+      "user.notify"
+    ],
+    "logic": [
+      "wait.duration",
+      "ifElse"
+    ]
+  },
+  "requirements": [
+    {
+      "type": "triggerIs",
+      "value": "contact.tagAdded"
+    },
+    {
+      "type": "triggerConfigEquals",
+      "field": "tag",
+      "value": "route:booking"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "tag.remove"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "email.send"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "wait.duration"
+    },
+    {
+      "type": "mustContainIfElse",
+      "minCount": 1
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "task.create"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "user.notify"
+    },
+    {
+      "type": "nodeOrder",
+      "sequence": [
+        "tag.remove",
+        "email.send",
+        "wait.duration",
+        "ifElse"
+      ]
+    }
+  ],
+  "testCases": [
+    {
+      "name": "Not booked, escalation happens",
+      "event": {
+        "type": "contact.tagAdded",
+        "tag": "route:booking"
+      },
+      "initialState": {
+        "tags": [
+          "route:booking"
+        ],
+        "fields": {
+          "email": "b@x.com"
+        }
+      },
+      "expect": {
+        "messages": [
+          {
+            "channel": "email",
+            "contains": [
+              "Book your call"
+            ]
+          },
+          {
+            "channel": "email",
+            "contains": [
+              "Reminder to book"
+            ]
+          }
+        ],
+        "tasksCreated": [
+          {
+            "contains": [
+              "Call lead"
+            ]
+          }
+        ],
+        "notifications": [
+          {
+            "contains": [
+              "not booked"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Already booked, no escalation",
+      "event": {
+        "type": "contact.tagAdded",
+        "tag": "route:booking"
+      },
+      "initialState": {
+        "tags": [
+          "route:booking",
+          "stage:booked"
+        ],
+        "fields": {
+          "email": "b@x.com"
+        }
+      },
+      "expect": {
+        "messages": [
+          {
+            "channel": "email",
+            "contains": [
+              "Book your call"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "teachBackPrompt": "Explain how this workflow escalates to a human and why it ends when stage:booked exists.",
+  "hints": [
+    {
+      "level": 1,
+      "text": "After the wait, check for stage:booked. Only escalate on Else."
+    },
+    {
+      "level": 2,
+      "text": "Make sure you create both a task and a notification in the escalation branch."
+    }
+  ],
+  "adminNotes": {
+    "acceptableVariants": [
+      "Send SMS reminder instead of email reminder if consent exists."
+    ],
+    "commonMistakes": [
+      "Escalation triggers even for booked contacts.",
+      "No task created for human follow-up."
+    ]
+  }
+}

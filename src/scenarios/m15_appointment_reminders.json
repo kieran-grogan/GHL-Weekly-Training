@@ -1,0 +1,134 @@
+{
+  "id": "m15_appointment_reminders",
+  "moduleId": "M15",
+  "title": "M15: Appointment Reminders + Cancellation Safety",
+  "phase": 3,
+  "estimatedMinutes": 22,
+  "objectives": [
+    "Build a two-step reminder sequence.",
+    "Check cancellation before each reminder.",
+    "Use waits for timed reminders."
+  ],
+  "allowedNodes": {
+    "triggers": [
+      "appointment.scheduled"
+    ],
+    "actions": [
+      "email.send",
+      "sms.send"
+    ],
+    "logic": [
+      "wait.duration",
+      "ifElse"
+    ]
+  },
+  "requirements": [
+    {
+      "type": "triggerIs",
+      "value": "appointment.scheduled"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "wait.duration"
+    },
+    {
+      "type": "mustContainIfElse",
+      "minCount": 2
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "email.send"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "sms.send"
+    }
+  ],
+  "testCases": [
+    {
+      "name": "Not canceled; reminders send",
+      "event": {
+        "type": "appointment.scheduled"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "email": "a@a.com",
+          "phone": "+1555"
+        }
+      },
+      "expect": {
+        "messages": [
+          {
+            "channel": "email",
+            "contains": [
+              "Confirmed"
+            ]
+          },
+          {
+            "channel": "email",
+            "contains": [
+              "Reminder 24h"
+            ]
+          },
+          {
+            "channel": "sms",
+            "contains": [
+              "Reminder 1h"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Canceled; reminders do not send",
+      "event": {
+        "type": "appointment.scheduled"
+      },
+      "initialState": {
+        "tags": [
+          "status:appt_canceled"
+        ],
+        "fields": {
+          "email": "a@a.com",
+          "phone": "+1555"
+        }
+      },
+      "expect": {
+        "messages": [
+          {
+            "channel": "email",
+            "contains": [
+              "Confirmed"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "teachBackPrompt": "Explain how cancel guardrails work and where you would place checks in a reminder workflow.",
+  "hints": [
+    {
+      "level": 1,
+      "text": "You need a cancel check before each reminder send."
+    },
+    {
+      "level": 2,
+      "text": "If TC2 still sends reminders, your cancel condition is missing or on the wrong branch."
+    },
+    {
+      "level": 3,
+      "text": "Use test run logs to confirm the cancel check evaluated true and Endped execution."
+    }
+  ],
+  "adminNotes": {
+    "acceptableVariants": [
+      "Swap channels (SMS for 24h, email for 1h) if tests are adjusted."
+    ],
+    "commonMistakes": [
+      "Only checking cancellation once at the beginning.",
+      "Wait durations set to 0.",
+      "Reminder steps not connected after waits."
+    ]
+  }
+}

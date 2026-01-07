@@ -1,0 +1,100 @@
+{
+  "id": "m23_webhook_outbound",
+  "moduleId": "M23",
+  "title": "M23: Send Data Out (Webhook) + Log It",
+  "phase": 5,
+  "estimatedMinutes": 16,
+  "objectives": [
+    "Fire outbound webhooks for integrations.",
+    "Log webhook events with tags.",
+    "Notify internal users of integration activity."
+  ],
+  "allowedNodes": {
+    "triggers": [
+      "contact.tagAdded"
+    ],
+    "actions": [
+      "webhook.send",
+      "tag.add",
+      "user.notify"
+    ],
+    "logic": []
+  },
+  "requirements": [
+    {
+      "type": "triggerIs",
+      "value": "contact.tagAdded"
+    },
+    {
+      "type": "triggerConfigEquals",
+      "field": "tag",
+      "value": "stage:qualified"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "webhook.send"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "tag.add"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "user.notify"
+    }
+  ],
+  "testCases": [
+    {
+      "name": "Qualified lead triggers webhook",
+      "event": {
+        "type": "contact.tagAdded",
+        "tag": "stage:qualified"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "email": "q@x.com"
+        }
+      },
+      "expect": {
+        "webhooksFired": [
+          {
+            "urlContains": [
+              "example.com/webhook"
+            ]
+          }
+        ],
+        "tagsAdded": [
+          "log:webhook_sent"
+        ],
+        "notifications": [
+          {
+            "contains": [
+              "Webhook"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "teachBackPrompt": "Explain what a webhook does and why you add a logging tag after firing it.",
+  "hints": [
+    {
+      "level": 1,
+      "text": "Your webhook step must include the URL so the validator can confirm it fired."
+    },
+    {
+      "level": 2,
+      "text": "Add tag log:webhook_sent after the webhook to create an audit trail."
+    }
+  ],
+  "adminNotes": {
+    "acceptableVariants": [
+      "Create a task instead of notify, as long as a human gets alerted."
+    ],
+    "commonMistakes": [
+      "Webhook URL missing or blank.",
+      "Webhook placed after end step."
+    ]
+  }
+}

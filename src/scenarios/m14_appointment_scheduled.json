@@ -1,0 +1,99 @@
+{
+  "id": "m14_appointment_scheduled",
+  "moduleId": "M14",
+  "title": "M14: Appointment Booked: Confirm + Update Status",
+  "phase": 3,
+  "estimatedMinutes": 18,
+  "objectives": [
+    "Respond to appointment scheduled events.",
+    "Tag contacts as booked for lifecycle tracking.",
+    "Send confirmations and internal notifications."
+  ],
+  "allowedNodes": {
+    "triggers": [
+      "appointment.scheduled"
+    ],
+    "actions": [
+      "tag.add",
+      "email.send",
+      "user.notify",
+      "tag.remove"
+    ],
+    "logic": []
+  },
+  "requirements": [
+    {
+      "type": "triggerIs",
+      "value": "appointment.scheduled"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "tag.add"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "email.send"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "user.notify"
+    }
+  ],
+  "testCases": [
+    {
+      "name": "Appointment booked",
+      "event": {
+        "type": "appointment.scheduled",
+        "calendarName": "Sales Calendar"
+      },
+      "initialState": {
+        "tags": [
+          "stage:contacted"
+        ],
+        "fields": {
+          "email": "b@example.com"
+        }
+      },
+      "expect": {
+        "tagsAdded": [
+          "stage:booked"
+        ],
+        "messages": [
+          {
+            "channel": "email",
+            "contains": [
+              "Confirmed"
+            ]
+          }
+        ],
+        "notifications": [
+          {
+            "contains": [
+              "appointment"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "teachBackPrompt": "Explain why booking should end nurture and what state changes this workflow makes.",
+  "hints": [
+    {
+      "level": 1,
+      "text": "Use the Appointment Status trigger, not tagAdded."
+    },
+    {
+      "level": 2,
+      "text": "Add the tag stage:booked before sending confirmations."
+    }
+  ],
+  "adminNotes": {
+    "acceptableVariants": [
+      "Remove tag stage:contacted after adding stage:booked."
+    ],
+    "commonMistakes": [
+      "Using wrong trigger instead of Appointment Status.",
+      "Forgetting to add booked tag."
+    ]
+  }
+}

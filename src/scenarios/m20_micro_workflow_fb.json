@@ -1,0 +1,124 @@
+{
+  "id": "m20_micro_workflow_fb",
+  "moduleId": "M20",
+  "title": "M20: Facebook Follow-up Mini-Workflow",
+  "phase": 5,
+  "estimatedMinutes": 18,
+  "objectives": [
+    "Trigger a micro-workflow from a route tag.",
+    "Clean up route tags to prevent re-entry.",
+    "Run a two-touch nurture sequence."
+  ],
+  "allowedNodes": {
+    "triggers": [
+      "contact.tagAdded"
+    ],
+    "actions": [
+      "tag.remove",
+      "tag.add",
+      "email.send"
+    ],
+    "logic": [
+      "wait.duration"
+    ]
+  },
+  "requirements": [
+    {
+      "type": "triggerIs",
+      "value": "contact.tagAdded"
+    },
+    {
+      "type": "triggerConfigEquals",
+      "field": "tag",
+      "value": "route:nurture_fb"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "tag.remove"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "tag.add"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "wait.duration"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "email.send"
+    },
+    {
+      "type": "nodeOrder",
+      "sequence": [
+        "tag.remove",
+        "email.send",
+        "wait.duration",
+        "email.send"
+      ]
+    }
+  ],
+  "testCases": [
+    {
+      "name": "route tag triggers nurture",
+      "event": {
+        "type": "contact.tagAdded",
+        "tag": "route:nurture_fb"
+      },
+      "initialState": {
+        "tags": [
+          "route:nurture_fb"
+        ],
+        "fields": {
+          "email": "fb@x.com"
+        }
+      },
+      "expect": {
+        "tagsRemoved": [
+          "route:nurture_fb"
+        ],
+        "tagsAdded": [
+          "stage:nurturing"
+        ],
+        "messages": [
+          {
+            "channel": "email",
+            "contains": [
+              "FB Nurture 1"
+            ]
+          },
+          {
+            "channel": "email",
+            "contains": [
+              "FB Nurture 2"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "teachBackPrompt": "Explain how this micro-workflow is triggered and why it removes the route tag immediately.",
+  "hints": [
+    {
+      "level": 1,
+      "text": "Your trigger must be Tag Added route:nurture_fb."
+    },
+    {
+      "level": 2,
+      "text": "Remove the route tag early to prevent re-trigger loops."
+    },
+    {
+      "level": 3,
+      "text": "If the second email does not appear, advance time to pass the wait."
+    }
+  ],
+  "adminNotes": {
+    "acceptableVariants": [
+      "Use SMS for the second touch if consent is present."
+    ],
+    "commonMistakes": [
+      "Not removing the route tag.",
+      "No wait between touches."
+    ]
+  }
+}

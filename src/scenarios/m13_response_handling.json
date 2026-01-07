@@ -1,0 +1,187 @@
+{
+  "moduleId": "M13",
+  "title": "M13: Reply Handler: Stop Follow-ups When They Reply",
+  "workflows": [
+    {
+      "workflowId": "nurture",
+      "scenario": {
+        "id": "m13_nurture",
+        "moduleId": "M13",
+        "title": "Nurture workflow",
+        "phase": 3,
+        "estimatedMinutes": 20,
+        "objectives": [
+          "Send initial outreach with a wait before follow-up.",
+          "end follow-up if responded tag is present.",
+          "Coordinate with a response handler workflow."
+        ],
+        "allowedNodes": {
+          "triggers": [
+            "contact.tagAdded"
+          ],
+          "actions": [
+            "email.send"
+          ],
+          "logic": [
+            "wait.duration",
+            "ifElse"
+          ]
+        },
+        "requirements": [
+          {
+            "type": "triggerIs",
+            "value": "contact.tagAdded"
+          },
+          {
+            "type": "triggerConfigEquals",
+            "field": "tag",
+            "value": "stage:contacted"
+          },
+          {
+            "type": "mustHaveNode",
+            "value": "wait.duration"
+          },
+          {
+            "type": "mustContainIfElse",
+            "minCount": 1
+          },
+          {
+            "type": "nodeOrder",
+            "sequence": [
+              "wait.duration",
+              "ifElse"
+            ]
+          }
+        ],
+        "testCases": [
+          {
+            "name": "Reply occurs and follow-up is prevented",
+            "event": {
+              "type": "contact.tagAdded",
+              "tag": "stage:contacted"
+            },
+            "initialState": {
+              "tags": [],
+              "fields": {
+                "email": "r@example.com"
+              }
+            },
+            "injectedEvents": [
+              {
+                "atSeconds": 3600,
+                "event": {
+                  "type": "conversation.reply"
+                }
+              }
+            ],
+            "expect": {
+              "messages": [
+                {
+                  "channel": "email",
+                  "contains": [
+                    "Initial Outreach"
+                  ]
+                }
+              ]
+            },
+            "notes": "Inject a Customer Replied event before the wait completes so status:responded ends follow-up."
+          }
+        ],
+        "teachBackPrompt": "Explain how Workflow B affects Workflow A, and describe how you would debug if follow-ups were still sending after a reply.",
+        "hints": [
+          {
+            "level": 1,
+            "text": "Workflow B must add the tag status:responded when a reply occurs."
+          },
+          {
+            "level": 2,
+            "text": "Workflow A must check for status:responded before sending follow-up."
+          },
+          {
+            "level": 3,
+            "text": "Use test run logs to confirm the reply workflow ran before follow-up."
+          }
+        ]
+      }
+    },
+    {
+      "workflowId": "response_handler",
+      "scenario": {
+        "id": "m13_response_handler",
+        "moduleId": "M13",
+        "title": "Response handler workflow",
+        "phase": 3,
+        "estimatedMinutes": 10,
+        "objectives": [
+          "Trigger on reply events.",
+          "Tag contacts as responded.",
+          "Notify the owner."
+        ],
+        "allowedNodes": {
+          "triggers": [
+            "conversation.reply"
+          ],
+          "actions": [
+            "tag.add",
+            "user.notify"
+          ],
+          "logic": []
+        },
+        "requirements": [
+          {
+            "type": "triggerIs",
+            "value": "conversation.reply"
+          },
+          {
+            "type": "mustHaveNode",
+            "value": "tag.add"
+          },
+          {
+            "type": "mustHaveNode",
+            "value": "user.notify"
+          }
+        ],
+        "testCases": [
+          {
+            "name": "Reply event tags responded",
+            "event": {
+              "type": "conversation.reply"
+            },
+            "initialState": {
+              "tags": [],
+              "fields": {
+                "email": "r@example.com"
+              }
+            },
+            "expect": {
+              "tagsAdded": [
+                "status:responded"
+              ],
+              "notifications": [
+                {
+                  "contains": [
+                    "Lead replied"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "teachBackPrompt": "Explain how Workflow B affects Workflow A, and describe how you would debug if follow-ups were still sending after a reply.",
+        "hints": [
+          {
+            "level": 1,
+            "text": "Workflow B must add the tag status:responded reliably when a reply event happens."
+          },
+          {
+            "level": 2,
+            "text": "Use test run logs to confirm the tag was added before the nurture follow-up step."
+          }
+        ]
+      }
+    }
+  ],
+  "systemRules": {
+    "autoTriggerOnTagAdded": true
+  }
+}

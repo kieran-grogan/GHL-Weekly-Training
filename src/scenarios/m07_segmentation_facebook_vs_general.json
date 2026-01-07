@@ -1,0 +1,117 @@
+{
+  "id": "m07_segmentation_facebook_vs_general",
+  "moduleId": "M07",
+  "title": "M07: Different Message for Facebook Leads",
+  "phase": 2,
+  "estimatedMinutes": 18,
+  "objectives": [
+    "Use fieldEquals conditions for segmentation.",
+    "Deliver distinct messaging per segment.",
+    "Provide a default path for non-Facebook leads."
+  ],
+  "allowedNodes": {
+    "triggers": [
+      "contact.tagAdded"
+    ],
+    "actions": [
+      "email.send"
+    ],
+    "logic": [
+      "ifElse"
+    ]
+  },
+  "requirements": [
+    {
+      "type": "triggerIs",
+      "value": "contact.tagAdded"
+    },
+    {
+      "type": "triggerConfigEquals",
+      "field": "tag",
+      "value": "stage:new"
+    },
+    {
+      "type": "mustContainIfElse",
+      "minCount": 1
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "email.send"
+    }
+  ],
+  "testCases": [
+    {
+      "name": "Facebook lead",
+      "event": {
+        "type": "contact.tagAdded",
+        "tag": "stage:new"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "lead_source": "Facebook",
+          "email": "fb@example.com"
+        }
+      },
+      "expect": {
+        "messages": [
+          {
+            "channel": "email",
+            "contains": [
+              "Facebook"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Google lead",
+      "event": {
+        "type": "contact.tagAdded",
+        "tag": "stage:new"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "lead_source": "Google",
+          "email": "g@example.com"
+        }
+      },
+      "expect": {
+        "messages": [
+          {
+            "channel": "email",
+            "contains": [
+              "General"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "teachBackPrompt": "Explain how field-based segmentation works and what happens for a Google lead vs a Facebook lead.",
+  "hints": [
+    {
+      "level": 1,
+      "text": "Condition should be field lead_source equals Facebook."
+    },
+    {
+      "level": 2,
+      "text": "Use distinct email subjects so check can detect which branch ran."
+    },
+    {
+      "level": 3,
+      "text": "If both test cases produce the same subject, check your branch connections."
+    }
+  ],
+  "adminNotes": {
+    "acceptableVariants": [
+      "Use SMS instead of Email if consent is present, with distinct outputs."
+    ],
+    "commonMistakes": [
+      "Checking leadSource (typo) rather than lead_source.",
+      "Inconsistent field values causing branch failures.",
+      "Else branch missing."
+    ]
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "id": "m16_pipeline_stage_changed",
+  "moduleId": "M16",
+  "title": "M16: Pipeline Stage Change: Tell the Team",
+  "phase": 4,
+  "estimatedMinutes": 18,
+  "objectives": [
+    "Trigger automation on pipeline stage changes.",
+    "Ensure correct stage filters are applied.",
+    "Create tasks and notifications for follow-up."
+  ],
+  "allowedNodes": {
+    "triggers": [
+      "opportunity.stageChanged"
+    ],
+    "actions": [
+      "user.notify",
+      "task.create",
+      "tag.add"
+    ],
+    "logic": []
+  },
+  "requirements": [
+    {
+      "type": "triggerIs",
+      "value": "opportunity.stageChanged"
+    },
+    {
+      "type": "triggerConfigEquals",
+      "field": "stageName",
+      "value": "Proposal Sent"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "user.notify"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "task.create"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "tag.add"
+    }
+  ],
+  "testCases": [
+    {
+      "name": "Stage becomes Proposal Sent",
+      "event": {
+        "type": "opportunity.stageChanged",
+        "pipelineName": "Sales",
+        "stageName": "Proposal Sent"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "email": "p@p.com"
+        }
+      },
+      "expect": {
+        "tasksCreated": [
+          {
+            "contains": [
+              "proposal"
+            ]
+          }
+        ],
+        "notifications": [
+          {
+            "contains": [
+              "Proposal sent"
+            ]
+          }
+        ],
+        "tagsAdded": [
+          "stage:proposal-sent"
+        ]
+      }
+    }
+  ],
+  "teachBackPrompt": "Explain why stage-change triggers are useful and what could go wrong if the stage filter is wrong.",
+  "hints": [
+    {
+      "level": 1,
+      "text": "Set the stageName filter to exactly 'Proposal Sent'."
+    },
+    {
+      "level": 2,
+      "text": "If the workflow fires in other stages, your filter is missing."
+    }
+  ],
+  "adminNotes": {
+    "acceptableVariants": [
+      "Add a customer email confirming proposal delivery."
+    ],
+    "commonMistakes": [
+      "Trigger stage filter not set.",
+      "Task title empty or generic."
+    ]
+  }
+}

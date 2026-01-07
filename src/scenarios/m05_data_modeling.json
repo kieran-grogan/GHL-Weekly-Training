@@ -1,0 +1,85 @@
+{
+  "id": "m05_data_modeling",
+  "moduleId": "M05",
+  "title": "M05: Lead Source Basics (Field vs Tag)",
+  "phase": 1,
+  "estimatedMinutes": 12,
+  "objectives": [
+    "Capture lead source in a consistent field.",
+    "Reinforce tags as state markers.",
+    "Prepare data for later segmentation."
+  ],
+  "allowedNodes": {
+    "triggers": [
+      "contact.tagAdded"
+    ],
+    "actions": [
+      "field.update",
+      "tag.add"
+    ],
+    "logic": []
+  },
+  "requirements": [
+    {
+      "type": "triggerIs",
+      "value": "contact.tagAdded"
+    },
+    {
+      "type": "triggerConfigEquals",
+      "field": "tag",
+      "value": "src:facebook"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "field.update"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "tag.add"
+    }
+  ],
+  "testCases": [
+    {
+      "name": "src:facebook tag applied",
+      "event": {
+        "type": "contact.tagAdded",
+        "tag": "src:facebook"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {}
+      },
+      "expect": {
+        "fieldsEqual": [
+          {
+            "fieldKey": "lead_source",
+            "value": "Facebook"
+          }
+        ],
+        "tagsAdded": [
+          "seg:facebook"
+        ]
+      }
+    }
+  ],
+  "teachBackPrompt": "Explain the difference between using a field vs a tag for lead source, and why consistent values matter.",
+  "hints": [
+    {
+      "level": 1,
+      "text": "Your trigger filter must match the exact tag name src:facebook."
+    },
+    {
+      "level": 2,
+      "text": "Make sure the field key is lead_source and the value is exactly Facebook."
+    }
+  ],
+  "adminNotes": {
+    "acceptableVariants": [
+      "Add an extra tag log:source_set."
+    ],
+    "commonMistakes": [
+      "Storing lead source as a tag only.",
+      "Inconsistent values like facebook vs Facebook."
+    ]
+  }
+}

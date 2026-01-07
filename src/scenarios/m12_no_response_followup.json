@@ -1,0 +1,139 @@
+{
+  "id": "m12_no_response_followup",
+  "moduleId": "M12",
+  "title": "M12: Follow Up Only if They Did Not Reply",
+  "phase": 3,
+  "estimatedMinutes": 20,
+  "objectives": [
+    "Combine wait and If/Else for no-response logic.",
+    "end follow-ups when responded tag exists.",
+    "Add logging tags for follow-up sends."
+  ],
+  "allowedNodes": {
+    "triggers": [
+      "contact.tagAdded"
+    ],
+    "actions": [
+      "email.send",
+      "tag.add"
+    ],
+    "logic": [
+      "wait.duration",
+      "ifElse"
+    ]
+  },
+  "requirements": [
+    {
+      "type": "triggerIs",
+      "value": "contact.tagAdded"
+    },
+    {
+      "type": "triggerConfigEquals",
+      "field": "tag",
+      "value": "stage:contacted"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "wait.duration"
+    },
+    {
+      "type": "mustContainIfElse",
+      "minCount": 1
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "tag.add"
+    },
+    {
+      "type": "nodeOrder",
+      "sequence": [
+        "wait.duration",
+        "ifElse"
+      ]
+    }
+  ],
+  "testCases": [
+    {
+      "name": "No response",
+      "event": {
+        "type": "contact.tagAdded",
+        "tag": "stage:contacted"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "email": "nr@example.com"
+        }
+      },
+      "expect": {
+        "messages": [
+          {
+            "channel": "email",
+            "contains": [
+              "Initial Outreach"
+            ]
+          },
+          {
+            "channel": "email",
+            "contains": [
+              "Follow-up"
+            ]
+          }
+        ],
+        "tagsAdded": [
+          "log:followup_sent"
+        ]
+      }
+    },
+    {
+      "name": "Responded before follow-up",
+      "event": {
+        "type": "contact.tagAdded",
+        "tag": "stage:contacted"
+      },
+      "initialState": {
+        "tags": [
+          "status:responded"
+        ],
+        "fields": {
+          "email": "r@example.com"
+        }
+      },
+      "expect": {
+        "messages": [
+          {
+            "channel": "email",
+            "contains": [
+              "Initial Outreach"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "teachBackPrompt": "Explain how this pattern prevents sending follow-ups to someone who already replied and how you would implement end-on-response thinking.",
+  "hints": [
+    {
+      "level": 1,
+      "text": "After the Wait, add an If/Else that checks for tag status:responded."
+    },
+    {
+      "level": 2,
+      "text": "The follow-up email must be on the Else path only."
+    },
+    {
+      "level": 3,
+      "text": "If TC2 sends Follow-up, your condition or branches are reversed."
+    }
+  ],
+  "adminNotes": {
+    "acceptableVariants": [
+      "Add internal notification on response path before Endping."
+    ],
+    "commonMistakes": [
+      "Follow-up email placed on the True branch.",
+      "Missing wait so follow-up happens immediately.",
+      "Condition checks wrong tag name."
+    ]
+  }
+}

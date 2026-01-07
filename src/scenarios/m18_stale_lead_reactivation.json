@@ -1,0 +1,125 @@
+{
+  "id": "m18_stale_lead_reactivation",
+  "moduleId": "M18",
+  "title": "M18: Reactivate Old Leads Safely",
+  "phase": 4,
+  "estimatedMinutes": 20,
+  "objectives": [
+    "Delay reactivation with a long wait.",
+    "end outreach if a lead progressed.",
+    "Apply a reactivation tag when outreach is sent."
+  ],
+  "allowedNodes": {
+    "triggers": [
+      "contact.tagAdded"
+    ],
+    "actions": [
+      "email.send",
+      "tag.add"
+    ],
+    "logic": [
+      "wait.duration",
+      "ifElse"
+    ]
+  },
+  "requirements": [
+    {
+      "type": "triggerIs",
+      "value": "contact.tagAdded"
+    },
+    {
+      "type": "triggerConfigEquals",
+      "field": "tag",
+      "value": "stage:contacted"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "wait.duration"
+    },
+    {
+      "type": "mustContainIfElse",
+      "minCount": 1
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "email.send"
+    },
+    {
+      "type": "mustHaveNode",
+      "value": "tag.add"
+    },
+    {
+      "type": "nodeOrder",
+      "sequence": [
+        "wait.duration",
+        "ifElse"
+      ]
+    }
+  ],
+  "testCases": [
+    {
+      "name": "Stale, no progress -> reactivation sends",
+      "event": {
+        "type": "contact.tagAdded",
+        "tag": "stage:contacted"
+      },
+      "initialState": {
+        "tags": [],
+        "fields": {
+          "email": "s@s.com"
+        }
+      },
+      "expect": {
+        "messages": [
+          {
+            "channel": "email",
+            "contains": [
+              "Checking in"
+            ]
+          }
+        ],
+        "tagsAdded": [
+          "stage:reactivation"
+        ]
+      }
+    },
+    {
+      "name": "Already booked -> no reactivation",
+      "event": {
+        "type": "contact.tagAdded",
+        "tag": "stage:contacted"
+      },
+      "initialState": {
+        "tags": [
+          "stage:booked"
+        ],
+        "fields": {
+          "email": "s@s.com"
+        }
+      },
+      "expect": {
+        "messages": []
+      }
+    }
+  ],
+  "teachBackPrompt": "Explain how you prevent reactivation from hitting someone who already progressed and how you would implement the OR logic.",
+  "hints": [
+    {
+      "level": 1,
+      "text": "After the wait, add a check that detects progress (responded/booked/won) and ends."
+    },
+    {
+      "level": 2,
+      "text": "If OR is not supported in one condition, nest If/Else checks before sending."
+    }
+  ],
+  "adminNotes": {
+    "acceptableVariants": [
+      "Use SMS for reactivation if consent exists, with fallback email."
+    ],
+    "commonMistakes": [
+      "Reactivation sends even when booked because end condition is missing.",
+      "Wait too short so reactivation fires immediately."
+    ]
+  }
+}

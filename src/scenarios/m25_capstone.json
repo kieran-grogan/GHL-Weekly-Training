@@ -1,0 +1,473 @@
+{
+  "moduleId": "M25",
+  "title": "M25: Capstone: Full Lead-to-Appointment System",
+  "workflows": [
+    {
+      "workflowId": "router",
+      "scenario": {
+        "id": "m25_router",
+        "moduleId": "M25",
+        "title": "Intake router workflow",
+        "phase": 6,
+        "estimatedMinutes": 30,
+        "objectives": [
+          "Route incoming leads by lead_source.",
+          "Create a missing-info escalation path.",
+          "Tag routes for micro-workflows."
+        ],
+        "allowedNodes": {
+          "triggers": [
+            "form.submitted"
+          ],
+          "actions": [
+            "tag.add",
+            "task.create",
+            "user.notify"
+          ],
+          "logic": [
+            "ifElse"
+          ]
+        },
+        "requirements": [
+          {
+            "type": "triggerIs",
+            "value": "form.submitted"
+          },
+          {
+            "type": "mustHaveNode",
+            "value": "tag.add"
+          },
+          {
+            "type": "mustHaveNode",
+            "value": "task.create"
+          },
+          {
+            "type": "mustHaveNode",
+            "value": "user.notify"
+          },
+          {
+            "type": "mustContainIfElse",
+            "minCount": 1
+          }
+        ],
+        "testCases": [
+          {
+            "name": "FB lead routes to FB nurture",
+            "event": {
+              "type": "form.submitted",
+              "formName": "Lead Form"
+            },
+            "initialState": {
+              "tags": [],
+              "fields": {
+                "lead_source": "Facebook",
+                "email": "fb@x.com"
+              }
+            },
+            "expect": {
+              "tagsAdded": [
+                "route:nurture_fb"
+              ]
+            }
+          },
+          {
+            "name": "General lead routes to general nurture",
+            "event": {
+              "type": "form.submitted",
+              "formName": "Lead Form"
+            },
+            "initialState": {
+              "tags": [],
+              "fields": {
+                "lead_source": "Google",
+                "email": "g@x.com"
+              }
+            },
+            "expect": {
+              "tagsAdded": [
+                "route:nurture_general"
+              ]
+            }
+          },
+          {
+            "name": "Missing info path escalates",
+            "event": {
+              "type": "form.submitted",
+              "formName": "Lead Form"
+            },
+            "initialState": {
+              "tags": [],
+              "fields": {
+                "lead_source": "Facebook"
+              }
+            },
+            "expect": {
+              "tasksCreated": [
+                {
+                  "contains": [
+                    "missing contact info"
+                  ]
+                }
+              ],
+              "notifications": [
+                {
+                  "contains": [
+                    "missing contact info"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "teachBackPrompt": "Teach-back: Explain your system like you are onboarding a new VA.",
+        "hints": [
+          {
+            "level": 1,
+            "text": "Start from the router: it should only decide and tag routes, not do nurture."
+          },
+          {
+            "level": 2,
+            "text": "Ensure nurture workflows remove route tags and include response end checks."
+          }
+        ]
+      }
+    },
+    {
+      "workflowId": "nurture_fb",
+      "scenario": {
+        "id": "m25_nurture_fb",
+        "moduleId": "M25",
+        "title": "FB nurture workflow",
+        "phase": 6,
+        "estimatedMinutes": 20,
+        "objectives": [
+          "Run a two-touch FB nurture sequence.",
+          "Remove route tags on entry.",
+          "Use waits to pace outreach."
+        ],
+        "allowedNodes": {
+          "triggers": [
+            "contact.tagAdded"
+          ],
+          "actions": [
+            "tag.remove",
+            "tag.add",
+            "email.send"
+          ],
+          "logic": [
+            "wait.duration"
+          ]
+        },
+        "requirements": [
+          {
+            "type": "triggerIs",
+            "value": "contact.tagAdded"
+          },
+          {
+            "type": "triggerConfigEquals",
+            "field": "tag",
+            "value": "route:nurture_fb"
+          },
+          {
+            "type": "mustHaveNode",
+            "value": "tag.remove"
+          },
+          {
+            "type": "mustHaveNode",
+            "value": "email.send"
+          },
+          {
+            "type": "mustHaveNode",
+            "value": "wait.duration"
+          }
+        ],
+        "testCases": [],
+        "teachBackPrompt": "Teach-back: Explain your system like you are onboarding a new VA.",
+        "hints": [
+          {
+            "level": 1,
+            "text": "Remove route tags and pace messages with waits."
+          }
+        ]
+      }
+    },
+    {
+      "workflowId": "nurture_general",
+      "scenario": {
+        "id": "m25_nurture_general",
+        "moduleId": "M25",
+        "title": "General nurture workflow",
+        "phase": 6,
+        "estimatedMinutes": 20,
+        "objectives": [
+          "end nurture after a response.",
+          "Use wait + If/Else guardrail.",
+          "Keep route tags clean."
+        ],
+        "allowedNodes": {
+          "triggers": [
+            "contact.tagAdded"
+          ],
+          "actions": [
+            "tag.remove",
+            "tag.add",
+            "email.send"
+          ],
+          "logic": [
+            "wait.duration",
+            "ifElse"
+          ]
+        },
+        "requirements": [
+          {
+            "type": "triggerIs",
+            "value": "contact.tagAdded"
+          },
+          {
+            "type": "triggerConfigEquals",
+            "field": "tag",
+            "value": "route:nurture_general"
+          },
+          {
+            "type": "mustContainIfElse",
+            "minCount": 1
+          },
+          {
+            "type": "mustHaveNode",
+            "value": "wait.duration"
+          }
+        ],
+        "testCases": [
+          {
+            "name": "Reply ends nurture follow-up",
+            "event": {
+              "type": "contact.tagAdded",
+              "tag": "route:nurture_general"
+            },
+            "initialState": {
+              "tags": [
+                "route:nurture_general"
+              ],
+              "fields": {
+                "email": "g@x.com"
+              }
+            },
+            "injectedEvents": [
+              {
+                "atSeconds": 3600,
+                "event": {
+                  "type": "conversation.reply"
+                }
+              }
+            ],
+            "expect": {
+              "messages": [
+                {
+                  "channel": "email",
+                  "contains": [
+                    "General Nurture 1"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "teachBackPrompt": "Teach-back: Explain your system like you are onboarding a new VA.",
+        "hints": [
+          {
+            "level": 1,
+            "text": "Check status:responded before the second touch."
+          }
+        ]
+      }
+    },
+    {
+      "workflowId": "response_handler",
+      "scenario": {
+        "id": "m25_response_handler",
+        "moduleId": "M25",
+        "title": "Response handler workflow",
+        "phase": 6,
+        "estimatedMinutes": 16,
+        "objectives": [
+          "Trigger on replies and tag responded.",
+          "Notify internal users."
+        ],
+        "allowedNodes": {
+          "triggers": [
+            "conversation.reply"
+          ],
+          "actions": [
+            "tag.add",
+            "user.notify"
+          ],
+          "logic": []
+        },
+        "requirements": [
+          {
+            "type": "triggerIs",
+            "value": "conversation.reply"
+          },
+          {
+            "type": "mustHaveNode",
+            "value": "tag.add"
+          },
+          {
+            "type": "mustHaveNode",
+            "value": "user.notify"
+          }
+        ],
+        "testCases": [],
+        "teachBackPrompt": "Teach-back: Explain your system like you are onboarding a new VA.",
+        "hints": [
+          {
+            "level": 1,
+            "text": "Add status:responded when a reply happens."
+          }
+        ]
+      }
+    },
+    {
+      "workflowId": "booking_assist",
+      "scenario": {
+        "id": "m25_booking_assist",
+        "moduleId": "M25",
+        "title": "Booking assist workflow",
+        "phase": 6,
+        "estimatedMinutes": 20,
+        "objectives": [
+          "Encourage booking with follow-ups.",
+          "Escalate to humans if not booked.",
+          "end escalation when booked."
+        ],
+        "allowedNodes": {
+          "triggers": [
+            "contact.tagAdded"
+          ],
+          "actions": [
+            "tag.remove",
+            "email.send",
+            "task.create",
+            "user.notify"
+          ],
+          "logic": [
+            "wait.duration",
+            "ifElse"
+          ]
+        },
+        "requirements": [
+          {
+            "type": "triggerIs",
+            "value": "contact.tagAdded"
+          },
+          {
+            "type": "triggerConfigEquals",
+            "field": "tag",
+            "value": "route:booking"
+          },
+          {
+            "type": "mustHaveNode",
+            "value": "wait.duration"
+          },
+          {
+            "type": "mustContainIfElse",
+            "minCount": 1
+          },
+          {
+            "type": "mustHaveNode",
+            "value": "task.create"
+          }
+        ],
+        "testCases": [
+          {
+            "name": "Booked ends escalation",
+            "event": {
+              "type": "contact.tagAdded",
+              "tag": "route:booking"
+            },
+            "initialState": {
+              "tags": [
+                "route:booking",
+                "stage:booked"
+              ],
+              "fields": {
+                "email": "b@x.com"
+              }
+            },
+            "expect": {
+              "messages": [
+                {
+                  "channel": "email",
+                  "contains": [
+                    "Book your call"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "teachBackPrompt": "Teach-back: Explain your system like you are onboarding a new VA.",
+        "hints": [
+          {
+            "level": 1,
+            "text": "end escalation if stage:booked exists."
+          }
+        ]
+      }
+    },
+    {
+      "workflowId": "appointment_confirmation",
+      "scenario": {
+        "id": "m25_appointment_confirmation",
+        "moduleId": "M25",
+        "title": "Appointment confirmation workflow",
+        "phase": 6,
+        "estimatedMinutes": 16,
+        "objectives": [
+          "Tag booked leads and confirm appointments.",
+          "Notify ops on bookings."
+        ],
+        "allowedNodes": {
+          "triggers": [
+            "appointment.scheduled"
+          ],
+          "actions": [
+            "tag.add",
+            "email.send",
+            "user.notify"
+          ],
+          "logic": []
+        },
+        "requirements": [
+          {
+            "type": "triggerIs",
+            "value": "appointment.scheduled"
+          },
+          {
+            "type": "mustHaveNode",
+            "value": "tag.add"
+          },
+          {
+            "type": "mustHaveNode",
+            "value": "email.send"
+          },
+          {
+            "type": "mustHaveNode",
+            "value": "user.notify"
+          }
+        ],
+        "testCases": [],
+        "teachBackPrompt": "Teach-back: Explain your system like you are onboarding a new VA.",
+        "hints": [
+          {
+            "level": 1,
+            "text": "Tag stage:booked and send confirmation + notify."
+          }
+        ]
+      }
+    }
+  ],
+  "systemRules": {
+    "autoTriggerOnTagAdded": true
+  }
+}
