@@ -10,17 +10,27 @@ import { lintScenarioDefinition } from "@/lib/scenarioLinter";
 export const runtime = "nodejs";
 
 type ModulePageProps = {
-  params: { moduleId: string };
+  params: Promise<{ moduleId: string }> | { moduleId: string };
 };
 
-const loadModuleMarkdown = (filePath: string) => {
-  const absolutePath = path.join(process.cwd(), filePath);
-  return fs.readFileSync(absolutePath, "utf8");
+const loadModuleMarkdown = (filePath: string): string => {
+  try {
+    const absolutePath = path.join(process.cwd(), filePath);
+    if (!fs.existsSync(absolutePath)) {
+      console.error(`Module file not found: ${absolutePath}`);
+      throw new Error(`Module file not found: ${filePath}`);
+    }
+    return fs.readFileSync(absolutePath, "utf8");
+  } catch (error) {
+    console.error(`Error loading module file ${filePath}:`, error);
+    throw error;
+  }
 };
 
-export default function ModulePage({ params }: ModulePageProps) {
+export default async function ModulePage({ params }: ModulePageProps) {
+  const resolvedParams = await Promise.resolve(params);
   const entryIndex = moduleManifest.findIndex(
-    (item) => item.moduleId === params.moduleId
+    (item) => item.moduleId === resolvedParams.moduleId
   );
 
   if (entryIndex === -1) {
@@ -28,7 +38,17 @@ export default function ModulePage({ params }: ModulePageProps) {
   }
 
   const entry = moduleManifest[entryIndex];
-  const learnMarkdown = loadModuleMarkdown(entry.file);
+  
+  let learnMarkdown: string;
+  try {
+    learnMarkdown = loadModuleMarkdown(entry.file);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(`Failed to load module ${entry.moduleId} from ${entry.file}:`, errorMessage);
+    // Return a fallback markdown content
+    learnMarkdown = `# ${entry.title}\n\n⚠️ Error loading module content.\n\nFile path: ${entry.file}\nError: ${errorMessage}\n\nPlease ensure the module file exists and is accessible.`;
+  }
+  
   const teachBackPrompt = extractTeachBackPrompt(learnMarkdown);
   const scenario = getScenarioForModule(entry.moduleId);
   if (scenario) {
