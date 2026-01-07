@@ -15,14 +15,55 @@ type ModulePageProps = {
 
 const loadModuleMarkdown = (filePath: string): string => {
   try {
-    const absolutePath = path.join(process.cwd(), filePath);
+    // In Next.js/Vercel, process.cwd() should point to the project root
+    // The modules directory is at the root level
+    const cwd = process.cwd();
+    const absolutePath = path.resolve(cwd, filePath);
+    
+    // Log for debugging (will appear in Vercel logs)
+    console.log(`[ModuleLoader] Attempting to load: ${filePath}`);
+    console.log(`[ModuleLoader] CWD: ${cwd}`);
+    console.log(`[ModuleLoader] Absolute path: ${absolutePath}`);
+    console.log(`[ModuleLoader] File exists: ${fs.existsSync(absolutePath)}`);
+    
     if (!fs.existsSync(absolutePath)) {
-      console.error(`Module file not found: ${absolutePath}`);
-      throw new Error(`Module file not found: ${filePath}`);
+      // Try alternative paths
+      const altPaths = [
+        path.join(cwd, filePath),
+        path.resolve(".", filePath),
+        path.resolve("/", filePath), // Root absolute path
+      ];
+      
+      console.log(`[ModuleLoader] Trying alternative paths:`, altPaths);
+      
+      for (const altPath of altPaths) {
+        if (fs.existsSync(altPath)) {
+          console.log(`[ModuleLoader] Found file at: ${altPath}`);
+          return fs.readFileSync(altPath, "utf8");
+        }
+      }
+      
+      // List directory contents for debugging
+      try {
+        const dirContents = fs.readdirSync(cwd);
+        console.log(`[ModuleLoader] CWD contents:`, dirContents.slice(0, 20));
+        const modulesDir = path.join(cwd, "modules");
+        if (fs.existsSync(modulesDir)) {
+          const modulesContents = fs.readdirSync(modulesDir);
+          console.log(`[ModuleLoader] Modules directory exists with ${modulesContents.length} files`);
+        } else {
+          console.log(`[ModuleLoader] Modules directory does not exist at: ${modulesDir}`);
+        }
+      } catch (dirError) {
+        console.error(`[ModuleLoader] Error listing directory:`, dirError);
+      }
+      
+      throw new Error(`Module file not found: ${filePath} (tried: ${absolutePath})`);
     }
+    
     return fs.readFileSync(absolutePath, "utf8");
   } catch (error) {
-    console.error(`Error loading module file ${filePath}:`, error);
+    console.error(`[ModuleLoader] Error loading module file ${filePath}:`, error);
     throw error;
   }
 };
