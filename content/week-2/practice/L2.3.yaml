@@ -1,0 +1,20 @@
+moduleId: "L2.3"
+practiceType: "checklist"
+title: "Social Media Planner Deep Dive"
+description: "Complete all items below to demonstrate competency with Social Media Planner setup, scheduling, and troubleshooting."
+
+checklistItems:
+  - id: "connected-accounts"
+    description: "Show connected accounts OR document what's missing - Navigate to Social Planner and verify which social media accounts are connected. If accounts are missing, document which ones and why they might be missing."
+  
+  - id: "verify-timezone"
+    description: "Verify time zone - Confirm the time zone setting in Social Planner matches your business profile time zone. This is critical for correct post scheduling."
+  
+  - id: "manual-posts"
+    description: "Create + schedule 2 manual posts - Create 2 posts manually (one for Facebook, one for Instagram or another platform). Schedule them for different days/times."
+  
+  - id: "edit-scheduled-post"
+    description: "Edit one scheduled post and resave - Find a scheduled post in the queue/calendar, edit its content or timing, and resave it."
+  
+  - id: "failure-checklist"
+    description: "Write 5-bullet failure checklist - Document 5 common failure modes for Social Planner posts (e.g., wrong timezone, disconnected account, media upload fails, etc.) and how to diagnose/fix them."

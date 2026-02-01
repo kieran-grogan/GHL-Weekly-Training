@@ -1,41 +1,26 @@
 moduleId: "L2.1"
 practiceType: "checklist"
 title: "Complete GHL Orientation"
-description: "Complete all items below in the correct sub-account. Evidence required for each item."
+description: "Complete all items below in the correct sub-account."
 
 checklistItems:
   - id: "verify-location-timezone"
     description: "Verify correct Location + Timezone (MANDATORY) - Confirm the correct location/sub-account (top-left) and verify Business Profile → Timezone."
-    requiredEvidence:
-      - "screenshot"
   
   - id: "navigation-scavenger-hunt"
     description: "Navigation scavenger hunt (fast) - Open and identify where these live (no edits): Dashboard, Contacts, Conversations, Opportunities / Pipelines, Automation → Workflows, Marketing → Social Planner, Settings."
-    requiredEvidence:
-      - "loom"
   
   - id: "contacts-competency"
     description: "Contacts competency - Create a test contact: TRAINING__Test Contact — <YourName>. Open the contact record and locate tags, timeline/activity, and custom fields section."
-    requiredEvidence:
-      - "screenshot"
   
   - id: "conversations-competency"
     description: "Conversations competency (ownership + internal note) - Find Assigned vs Unassigned filters. Open any thread (training/test preferred) and add one internal note (no sending)."
-    requiredEvidence:
-      - "screenshot"
   
   - id: "opportunities-pipelines-competency"
     description: "Opportunities / Pipelines competency (MANDATORY) - Create a test opportunity in the correct pipeline (or training pipeline). Move it across two stages."
-    requiredEvidence:
-      - "screenshot"
-      - "screenshot"
   
   - id: "workflows-visibility"
     description: "Workflows visibility - Search for a workflow. Locate execution logs / history (where you confirm it's running)."
-    requiredEvidence:
-      - "screenshot"
   
   - id: "three-questions"
     description: "3 questions (blocker awareness) - Write 3 questions you still have about the platform OR 3 \"failure modes\" you think would break a build."
-    requiredEvidence:
-      - "text"

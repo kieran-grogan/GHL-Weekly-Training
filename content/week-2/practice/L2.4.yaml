@@ -1,24 +1,20 @@
 moduleId: "L2.4"
-practiceType: "deliverable"
+practiceType: "checklist"
 title: "Master Social Media Planner CSV"
-description: "Create and submit your customized social media planner CSV based on the template"
+description: "Complete all items below to demonstrate competency with CSV bulk import, validation, and post management."
 
-deliverables:
-  - id: "csv-template"
-    name: "Social Media Planner CSV"
-    description: "Fill out the complete social media planner with at least 10 posts across different platforms"
-    template: |
-      Date,Platform,Post Content,Hashtags,Media URL,Status
-      2024-02-01,Facebook,Example post content,#hashtag1 #hashtag2,https://...,scheduled
-    fileTypes:
-      - ".csv"
-      - ".xlsx"
-      - "Google Sheets link"
+checklistItems:
+  - id: "locate-csv-import"
+    description: "Locate CSV import function - Find where to import CSV files in Social Planner."
   
-  - id: "content-calendar"
-    name: "Content Calendar Screenshot"
-    description: "Screenshot of your content calendar showing the planned posts"
-    fileTypes:
-      - ".png"
-      - ".jpg"
-      - "Loom video"
+  - id: "import-sample-csv"
+    description: "Import sample CSV and confirm no errors - Use the provided sample CSV or create your own. Import it and verify there are no import errors."
+  
+  - id: "verify-posts-in-queue"
+    description: "Verify ≥ 5 posts appear in queue - After import, check the Social Planner queue/calendar and confirm at least 5 posts are visible and scheduled."
+  
+  - id: "edit-imported-post"
+    description: "Edit one imported post - Select one of the imported posts, edit its content or scheduling, and save the changes."
+  
+  - id: "write-sop"
+    description: "Write SOP (10-15 lines) \"How we bulk schedule posts\" - Create a Standard Operating Procedure document explaining the CSV bulk scheduling process. Include: CSV format requirements, header row requirements, time zone considerations, common gotchas, and validation steps."

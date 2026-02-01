@@ -1,0 +1,69 @@
+moduleId: "L2.2"
+practiceType: "deliverable"
+title: "StrategixAI Operating Model Playbook"
+description: "Create a 1-page playbook documenting how StrategixAI uses GHL for clients. This playbook should explain our operating model and identify where 'truth lives' in the system."
+
+deliverables:
+  - id: "operating-model-playbook"
+    name: "StrategixAI Operating Model Playbook (1 page)"
+    description: |
+      Create a concise 1-page playbook (markdown or text format) that documents how StrategixAI operates using GHL. 
+      The playbook must include these 6 sections:
+      
+      1. What we sell (1 paragraph)
+         - Describe StrategixAI's core service offering
+      
+      2. How leads enter
+         - Explain the lead entry points and initial contact process
+      
+      3. How comms are handled (ownership + escalation)
+         - Document conversation ownership rules
+         - Explain escalation path: Diana → Brian → Hunter
+         - Note billing escalations go to Mark
+      
+      4. How status is tracked (pipelines/tasks)
+         - Identify which pipelines track client status
+         - Explain how tasks are used for operations
+         - Note where "truth lives" for client status
+      
+      5. How we automate (workflows/fields/values)
+         - Describe key automation workflows
+         - Explain how custom fields and values power automation
+         - Identify critical automation touchpoints
+      
+      6. How support works post-handoff
+         - Explain the support process after client onboarding
+         - Document support ticket workflow
+         - Note escalation points for support issues
+      
+      **Pass Criteria:**
+      - Explains escalation path clearly (Diana → Brian → Hunter; Billing → Mark)
+      - Identifies at least 3 "truth lives here" examples (e.g., "Pipeline stage is the source of truth for client status")
+      - All 6 sections are present and complete
+    template: |
+      # StrategixAI Operating Model Playbook
+      
+      ## What We Sell
+      [1 paragraph describing StrategixAI's core service]
+      
+      ## How Leads Enter
+      [Explain lead entry points and initial contact process]
+      
+      ## How Comms Are Handled (Ownership + Escalation)
+      [Document conversation ownership and escalation paths]
+      - Escalation: Diana → Brian → Hunter
+      - Billing: Mark
+      
+      ## How Status Is Tracked (Pipelines/Tasks)
+      [Identify pipelines, tasks, and where "truth lives"]
+      
+      ## How We Automate (Workflows/Fields/Values)
+      [Describe automation workflows and field/value usage]
+      
+      ## How Support Works Post-Handoff
+      [Explain support process and escalation points]
+    fileTypes:
+      - ".md"
+      - ".txt"
+      - "Google Docs link"
+      - "Notion page link"

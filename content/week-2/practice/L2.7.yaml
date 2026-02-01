@@ -1,0 +1,86 @@
+moduleId: "L2.7"
+practiceType: "deliverable"
+title: "Shadow Client Task SOP"
+description: "Create a Standard Operating Procedure (SOP) draft v0.1 for a client task you shadowed. The SOP should be executable by Diana without additional questions."
+
+deliverables:
+  - id: "sop-draft"
+    name: "Client Task SOP Draft v0.1"
+    description: |
+      Create a comprehensive SOP document for a client task you shadowed (with Kieran, Hunter, or another team member).
+      The SOP must include all sections below and be detailed enough that Diana could execute the task without asking questions.
+      
+      **Required Sections:**
+      
+      1. Goal of task
+         - What is the purpose of this task?
+         - What outcome are we trying to achieve?
+      
+      2. Where in GHL it happens (modules)
+         - Which GHL modules/sections are involved?
+         - What is the navigation path?
+         - Are there specific locations or settings?
+      
+      3. Steps
+         - Detailed step-by-step instructions
+         - Include screenshots or references where helpful
+         - Number each step clearly
+      
+      4. QA checklist
+         - How do you verify the task was completed correctly?
+         - What should you check before marking it done?
+         - What are the success criteria?
+      
+      5. Failure modes + fixes
+         - What can go wrong?
+         - How do you diagnose the issue?
+         - What are the fixes for each failure mode?
+      
+      6. Escalation points
+         - When should you escalate?
+         - Who do you escalate to?
+         - What information should you provide when escalating?
+      
+      **Pass Criteria:**
+      - SOP is executable by Diana without additional questions
+      - All 6 sections are present and complete
+      - Steps are clear and actionable
+      - Failure modes and escalation points are documented
+    template: |
+      # [Task Name] SOP v0.1
+      
+      ## Goal of Task
+      [Describe the purpose and desired outcome]
+      
+      ## Where in GHL It Happens (Modules)
+      [List modules, navigation path, specific locations]
+      
+      ## Steps
+      1. [Step 1]
+      2. [Step 2]
+      3. [Step 3]
+      ...
+      
+      ## QA Checklist
+      - [ ] [Check 1]
+      - [ ] [Check 2]
+      - [ ] [Check 3]
+      
+      ## Failure Modes + Fixes
+      ### Failure Mode 1: [Description]
+      - Diagnosis: [How to identify]
+      - Fix: [How to resolve]
+      
+      ### Failure Mode 2: [Description]
+      - Diagnosis: [How to identify]
+      - Fix: [How to resolve]
+      
+      ## Escalation Points
+      - **When to escalate:** [Conditions]
+      - **Who to contact:** [Name/Role]
+      - **What to provide:** [Information needed]
+    fileTypes:
+      - ".md"
+      - ".txt"
+      - "Google Docs link"
+      - "Notion page link"

@@ -73,25 +73,18 @@ export const ChecklistPractice = ({
                             <div className="checklist-description">{item.description}</div>
                         </div>
 
-                        {hasEvidenceRequirement && (
-                            <div className="checklist-evidence">
-                                <div className="evidence-label">
-                                    Required evidence:{" "}
-                                    {item.requiredEvidence!.map((type) => (
-                                        <span key={type} className="evidence-badge">
-                                            {type}
-                                        </span>
-                                    ))}
-                                </div>
-                                <textarea
-                                    className="text-input"
-                                    placeholder={`Paste ${item.requiredEvidence!.join(" or ")} link/text here...`}
-                                    value={state.evidence || ""}
-                                    onChange={(e) => updateEvidence(item.id, e.target.value)}
-                                    rows={3}
-                                />
+                        <div className="checklist-evidence">
+                            <div className="evidence-label">
+                                Optional notes/evidence:
                             </div>
-                        )}
+                            <textarea
+                                className="text-input"
+                                placeholder="Add any notes, links, or evidence here (optional)..."
+                                value={state.evidence || ""}
+                                onChange={(e) => updateEvidence(item.id, e.target.value)}
+                                rows={3}
+                            />
+                        </div>
                     </div>
                 );
             })}

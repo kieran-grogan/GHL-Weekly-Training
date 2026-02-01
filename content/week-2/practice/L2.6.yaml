@@ -1,0 +1,20 @@
+moduleId: "L2.6"
+practiceType: "checklist"
+title: "Replicate Strategix Pets Workflow"
+description: "Fix the broken wait/filter logic in the Strategix Pets workflow. This is a critical debugging exercise that teaches workflow troubleshooting."
+
+checklistItems:
+  - id: "duplicate-workflow"
+    description: "Duplicate/clone workflow first - Before making any changes, duplicate the Strategix Pets workflow. Name it 'TRAINING__Pets Workflow — FIXED — YYYY-MM-DD'."
+  
+  - id: "identify-hardcoded-filter"
+    description: "Identify hard-coded date/day filter - Locate the wait step or filter that has hard-coded date/day logic that causes contacts to get stuck."
+  
+  - id: "replace-with-evergreen"
+    description: "Replace with evergreen wait logic - Fix the hard-coded logic by replacing it with evergreen wait logic (e.g., wait X days from trigger, not a specific date)."
+  
+  - id: "test-contact-progress"
+    description: "Enroll 2-3 test contacts and prove they progress - Create 2-3 test contacts (TRAINING__Test Contact — <Name>), enroll them in the fixed workflow, and demonstrate that they progress past the previously stuck step."
+  
+  - id: "change-log"
+    description: "5-10 line change log - Write a brief change log documenting: (1) What was broken, (2) What you changed, (3) Why the fix works, (4) How you tested it."
