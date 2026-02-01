@@ -27,8 +27,16 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const manifest = getModuleManifest();
-  const weeks = getWeekManifests();
+  let manifest: ReturnType<typeof getModuleManifest> = [];
+  let weeks: ReturnType<typeof getWeekManifests> = [];
+  
+  try {
+    manifest = getModuleManifest();
+    weeks = getWeekManifests();
+  } catch (error) {
+    console.error("[RootLayout] Error loading manifests:", error);
+    // Use empty arrays as fallback
+  }
   
   return (
     <html lang="en">
