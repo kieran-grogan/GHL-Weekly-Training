@@ -1,0 +1,69 @@
+moduleId: "L2.5"
+practiceType: "system_build"
+title: "Build Functional Customer Support Process"
+description: "Build a complete customer support system with pipeline, forms, and workflows"
+
+systemParts:
+  - id: "pipeline-setup"
+    type: "pipeline"
+    title: "Customer Support Pipeline"
+    steps:
+      - id: "create-pipeline"
+        description: "Create a new pipeline called 'Customer Support'"
+        requiredEvidence: []
+      
+      - id: "add-stages"
+        description: "Add stages: New Ticket → In Progress → Waiting for Customer → Resolved → Closed"
+        requiredEvidence: []
+      
+      - id: "configure-automation"
+        description: "Configure automation settings for each stage"
+        requiredEvidence: []
+    
+    testProof:
+      required: true
+      description: "Take a screenshot of your completed pipeline with all stages visible"
+  
+  - id: "form-creation"
+    type: "form"
+    title: "Support Request Form"
+    steps:
+      - id: "create-form"
+        description: "Create a new form called 'Support Request'"
+        requiredEvidence: []
+      
+      - id: "add-fields"
+        description: "Add fields: Issue Type (dropdown), Description (textarea), Priority (radio), Contact Info"
+        requiredEvidence: []
+      
+      - id: "form-styling"
+        description: "Apply consistent styling and branding"
+        requiredEvidence: []
+    
+    testProof:
+      required: true
+      description: "Take a screenshot of your form in preview mode"
+  
+  - id: "workflow-automation"
+    type: "workflow"
+    title: "Support Ticket Workflow"
+    steps:
+      - id: "trigger-setup"
+        description: "Set trigger to 'Form Submitted' for Support Request form"
+        requiredEvidence: []
+      
+      - id: "create-opportunity"
+        description: "Add action to create opportunity in Customer Support pipeline"
+        requiredEvidence: []
+      
+      - id: "assign-ticket"
+        description: "Add action to assign ticket based on Issue Type"
+        requiredEvidence: []
+      
+      - id: "send-confirmation"
+        description: "Add action to send confirmation email to customer"
+        requiredEvidence: []
+    
+    testProof:
+      required: true
+      description: "Submit a test form and provide screenshot/video of the workflow executing successfully"

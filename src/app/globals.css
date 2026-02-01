@@ -280,6 +280,135 @@ button {
   gap: 16px;
 }
 
+.weeks-section {
+  margin-top: 30px;
+}
+
+.weeks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.week-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.week-card-header {
+  margin-bottom: 16px;
+}
+
+.week-card-title {
+  font-family: var(--font-display), serif;
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.week-card-subtitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.week-card-description {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.week-progress {
+  margin-top: 12px;
+}
+
+.week-progress-bar {
+  height: 6px;
+  background: rgba(29, 106, 122, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.week-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.week-progress-text {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.week-modules {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.module-card--compact {
+  padding: 12px;
+}
+
+.module-week-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(29, 106, 122, 0.1);
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.training-rules-section {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.training-rules-card {
+  border-left: 4px solid var(--accent-2);
+  background: rgba(210, 125, 45, 0.05);
+}
+
+.training-rules-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.training-rule {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.training-rule strong {
+  color: var(--accent-2);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.training-rule ul {
+  margin: 8px 0 0 20px;
+  padding: 0;
+}
+
+.training-rule li {
+  margin: 4px 0;
+}
+
+.training-rule code {
+  background: rgba(29, 106, 122, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: 'Courier New', monospace;
+}
+
 .module-card {
   background: var(--surface);
   border: 1px solid var(--border);

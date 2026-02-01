@@ -1,177 +1,58 @@
 [
   {
     "moduleNumber": 1,
-    "moduleId": "M01",
-    "title": "M01: Send a Welcome Text to a New Lead",
-    "phase": "1 (Fundamentals)",
-    "file": "modules/01_Workflow_Foundations_Contact_Created_to_Welcome_SMS.md"
+    "moduleId": "L2.1",
+    "title": "L2.1: Complete GHL Orientation",
+    "phase": "Week 2 - Operations",
+    "file": "modules/lesson-2.1-complete-ghl-orientation.md"
   },
   {
     "moduleNumber": 2,
-    "moduleId": "M02",
-    "title": "M02: New Lead Setup: Tag + Email + Text",
-    "phase": "1 (Fundamentals)",
-    "file": "modules/02_Configuration_Discipline_New_Contact_to_Tag_+_Email_+_SMS.md"
+    "moduleId": "L2.2",
+    "title": "L2.2: How We Use GHL for Clients",
+    "phase": "Week 2 - Operations",
+    "file": "modules/lesson-2.2-review-how-we-use-ghl-for-clients.md"
   },
   {
     "moduleNumber": 3,
-    "moduleId": "M03",
-    "title": "M03: When a Tag is Added: Tell the Team + Create a Task",
-    "phase": "1 (Fundamentals)",
-    "file": "modules/03_Tags_as_Events_Tag_Added_to_Notify_+_Task.md"
+    "moduleId": "L2.3",
+    "title": "L2.3: Social Media Planner Deep Dive",
+    "phase": "Week 2 - Marketing",
+    "file": "modules/lesson-2.3-social-media-planner-deep-dive.md"
   },
   {
     "moduleNumber": 4,
-    "moduleId": "M04",
-    "title": "M04: Form Submitted: Save Info + Alert the Team",
-    "phase": "1 (Fundamentals)",
-    "file": "modules/04_Form_Intake_Form_Submitted_to_Tag_+_Field_Update_+_Task_+_Notify.md"
+    "moduleId": "L2.4",
+    "title": "L2.4: Master Social Media CSVs",
+    "phase": "Week 2 - Marketing",
+    "file": "modules/lesson-2.4-master-social-media-planner-csv.md"
   },
   {
     "moduleNumber": 5,
-    "moduleId": "M05",
-    "title": "M05: Lead Source Basics (Field vs Tag)",
-    "phase": "1 (Fundamentals)",
-    "file": "modules/05_Data_Modeling_Using_Fields_to_Power_Future_Branching.md"
+    "moduleId": "L2.5",
+    "title": "L2.5: Functional Customer Support",
+    "phase": "Week 2 - Service",
+    "file": "modules/lesson-2.5-build-functional-customer-support-process.md"
   },
   {
     "moduleNumber": 6,
-    "moduleId": "M06",
-    "title": "M06: If They Have a Phone: Text Otherwise Email",
-    "phase": "2 (Branching + Guardrails)",
-    "file": "modules/06_If-Else_Guardrail_Phone_Exists_to_SMS,_Else_to_Email.md"
+    "moduleId": "L2.6",
+    "title": "L2.6: Replicate Strategix Pets Workflow",
+    "phase": "Week 2 - Automation",
+    "file": "modules/lesson-2.6-replicate-strategix-pets-workflow.md"
   },
   {
     "moduleNumber": 7,
-    "moduleId": "M07",
-    "title": "M07: Different Message for Facebook Leads",
-    "phase": "2 (Branching + Guardrails)",
-    "file": "modules/07_Segmentation_If_lead_source_=_Facebook_to_Message_A,_Else_to_Message_B.md"
+    "moduleId": "L2.7",
+    "title": "L2.7: Shadow Client Task Checklist",
+    "phase": "Week 2 - Practical",
+    "file": "modules/lesson-2.7-shadow-client-task-checklist.md"
   },
   {
     "moduleNumber": 8,
-    "moduleId": "M08",
-    "title": "M08: Facebook vs Google vs Other (3 Paths)",
-    "phase": "2 (Branching + Guardrails)",
-    "file": "modules/08_Multi-Branch_Segmentation_Facebook_vs_Google_vs_Other.md"
-  },
-  {
-    "moduleNumber": 9,
-    "moduleId": "M09",
-    "title": "M09: Do Not Contact: Stop Messages",
-    "phase": "2 (Branching + Guardrails)",
-    "file": "modules/09_Do-Not-Contact_Guardrail_Stop_Path.md"
-  },
-  {
-    "moduleNumber": 10,
-    "moduleId": "M10",
-    "title": "M10: Consent Check: Only Text if Allowed",
-    "phase": "2 (Branching + Guardrails)",
-    "file": "modules/10_Consent_Gating_If_consent_sms_=_true_to_SMS,_Else_to_Email.md"
-  },
-  {
-    "moduleNumber": 11,
-    "moduleId": "M11",
-    "title": "M11: 2-Step Follow-up With a Delay",
-    "phase": "3 (Sequences + Timing)",
-    "file": "modules/11_Timed_Sequence_Email_to_Wait_to_Follow-up.md"
-  },
-  {
-    "moduleNumber": 12,
-    "moduleId": "M12",
-    "title": "M12: Follow Up Only if They Did Not Reply",
-    "phase": "3 (Sequences + Timing)",
-    "file": "modules/12_No-Response_Follow-up_Pattern_Check_responded_tag.md"
-  },
-  {
-    "moduleNumber": 13,
-    "moduleId": "M13",
-    "title": "M13: Reply Handler: Stop Follow-ups When They Reply",
-    "phase": "3 (Sequences + Timing)",
-    "file": "modules/13_Response_Handling_conversation.reply_to_tag_responded_+_stop_nurture_(Multi-workflow).md"
-  },
-  {
-    "moduleNumber": 14,
-    "moduleId": "M14",
-    "title": "M14: Appointment Booked: Confirm + Update Status",
-    "phase": "3 (Sequences + Timing)",
-    "file": "modules/14_Appointment_Scheduled_Confirm_+_Tag_booked_+_Stop_Nurture.md"
-  },
-  {
-    "moduleNumber": 15,
-    "moduleId": "M15",
-    "title": "M15: Appointment Reminders + Cancellation Safety",
-    "phase": "3 (Sequences + Timing)",
-    "file": "modules/15_Appointment_Reminders_Wait-based_reminders_+_cancel_guardrail.md"
-  },
-  {
-    "moduleNumber": 16,
-    "moduleId": "M16",
-    "title": "M16: Pipeline Stage Change: Tell the Team",
-    "phase": "4 (Pipeline + Ops)",
-    "file": "modules/16_Pipeline_Stage_Changed_Proposal_Sent_to_Task_+_Notify.md"
-  },
-  {
-    "moduleNumber": 17,
-    "moduleId": "M17",
-    "title": "M17: Deal Won: Start Onboarding",
-    "phase": "4 (Pipeline + Ops)",
-    "file": "modules/17_Stage_Won_Customer_Onboarding_+_Ops_Handoff.md"
-  },
-  {
-    "moduleNumber": 18,
-    "moduleId": "M18",
-    "title": "M18: Reactivate Old Leads Safely",
-    "phase": "4 (Pipeline + Ops)",
-    "file": "modules/18_Stale_Lead_Reactivation_Wait_+_Branch_on_Responded-Booked.md"
-  },
-  {
-    "moduleNumber": 19,
-    "moduleId": "M19",
-    "title": "M19: Intake Router: Decide What Happens Next",
-    "phase": "5 (Systems + Micro-workflows)",
-    "file": "modules/19_Router_Workflow_Intake_to_Route_by_lead_source_+_Missing-Info_Path.md"
-  },
-  {
-    "moduleNumber": 20,
-    "moduleId": "M20",
-    "title": "M20: Facebook Follow-up Mini-Workflow",
-    "phase": "5 (Systems + Micro-workflows)",
-    "file": "modules/20_Micro-workflow_FB_Nurture_Sequence_(Triggered_by_route_tag).md"
-  },
-  {
-    "moduleNumber": 21,
-    "moduleId": "M21",
-    "title": "M21: General Follow-up Mini-Workflow (Stops on Reply)",
-    "phase": "5 (Systems + Micro-workflows)",
-    "file": "modules/21_Micro-workflow_General_Nurture_(Triggered_by_route_tag).md"
-  },
-  {
-    "moduleNumber": 22,
-    "moduleId": "M22",
-    "title": "M22: Booking Helper: Follow Up Then Escalate",
-    "phase": "5 (Systems + Micro-workflows)",
-    "file": "modules/22_Micro-workflow_Booking_Assist_+_Escalation.md"
-  },
-  {
-    "moduleNumber": 23,
-    "moduleId": "M23",
-    "title": "M23: Send Data Out (Webhook) + Log It",
-    "phase": "5 (Systems + Micro-workflows)",
-    "file": "modules/23_Webhook_Outbound_Qualified_Lead_to_Webhook_+_Logging_Tag.md"
-  },
-  {
-    "moduleNumber": 24,
-    "moduleId": "M24",
-    "title": "M24: Daily Ops Checklist (Scheduler)",
-    "phase": "6 (Advanced Ops)",
-    "file": "modules/24_Scheduler_Daily_Ops_(Contactless)_Create_Daily_Task_+_Notify.md"
-  },
-  {
-    "moduleNumber": 25,
-    "moduleId": "M25",
-    "title": "M25: Capstone: Full Lead-to-Appointment System",
-    "phase": "6 (Capstone)",
-    "file": "modules/25_Capstone_Full_Lifecycle_Automation_System_(Multi-workflow).md"
+    "moduleId": "L2.8",
+    "title": "L2.8: Week 2 Capstone & Teachback",
+    "phase": "Week 2 - Practical",
+    "file": "modules/lesson-2.8-week-2-practical-lab-and-teachback.md"
   }
 ]

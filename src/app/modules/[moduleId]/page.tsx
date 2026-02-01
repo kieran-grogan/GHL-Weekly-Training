@@ -1,11 +1,12 @@
 import fs from "fs";
 import path from "path";
 import { notFound } from "next/navigation";
-import { moduleManifest } from "@/data/moduleManifest";
+import { getModuleManifest } from "@/data/moduleManifest";
 import { ModuleShell } from "@/components/ModuleShell";
 import { extractTeachBackPrompt } from "@/lib/moduleParsing";
 import { getScenarioForModule } from "@/lib/scenarioLoader";
 import { lintScenarioDefinition } from "@/lib/scenarioLinter";
+import { loadPracticeSpec } from "@/lib/practiceLoader";
 
 export const runtime = "nodejs";
 
@@ -19,13 +20,13 @@ const loadModuleMarkdown = (filePath: string): string => {
     // The modules directory is at the root level
     const cwd = process.cwd();
     const absolutePath = path.resolve(cwd, filePath);
-    
+
     // Log for debugging (will appear in Vercel logs)
     console.log(`[ModuleLoader] Attempting to load: ${filePath}`);
     console.log(`[ModuleLoader] CWD: ${cwd}`);
     console.log(`[ModuleLoader] Absolute path: ${absolutePath}`);
     console.log(`[ModuleLoader] File exists: ${fs.existsSync(absolutePath)}`);
-    
+
     if (!fs.existsSync(absolutePath)) {
       // Try alternative paths
       const altPaths = [
@@ -33,16 +34,16 @@ const loadModuleMarkdown = (filePath: string): string => {
         path.resolve(".", filePath),
         path.resolve("/", filePath), // Root absolute path
       ];
-      
+
       console.log(`[ModuleLoader] Trying alternative paths:`, altPaths);
-      
+
       for (const altPath of altPaths) {
         if (fs.existsSync(altPath)) {
           console.log(`[ModuleLoader] Found file at: ${altPath}`);
           return fs.readFileSync(altPath, "utf8");
         }
       }
-      
+
       // List directory contents for debugging
       try {
         const dirContents = fs.readdirSync(cwd);
@@ -57,10 +58,10 @@ const loadModuleMarkdown = (filePath: string): string => {
       } catch (dirError) {
         console.error(`[ModuleLoader] Error listing directory:`, dirError);
       }
-      
+
       throw new Error(`Module file not found: ${filePath} (tried: ${absolutePath})`);
     }
-    
+
     return fs.readFileSync(absolutePath, "utf8");
   } catch (error) {
     console.error(`[ModuleLoader] Error loading module file ${filePath}:`, error);
@@ -70,6 +71,7 @@ const loadModuleMarkdown = (filePath: string): string => {
 
 export default async function ModulePage({ params }: ModulePageProps) {
   const resolvedParams = await Promise.resolve(params);
+  const moduleManifest = getModuleManifest();
   const entryIndex = moduleManifest.findIndex(
     (item) => item.moduleId === resolvedParams.moduleId
   );
@@ -79,7 +81,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
   }
 
   const entry = moduleManifest[entryIndex];
-  
+
   let learnMarkdown: string;
   try {
     learnMarkdown = loadModuleMarkdown(entry.file);
@@ -89,9 +91,10 @@ export default async function ModulePage({ params }: ModulePageProps) {
     // Return a fallback markdown content
     learnMarkdown = `# ${entry.title}\n\n⚠️ Error loading module content.\n\nFile path: ${entry.file}\nError: ${errorMessage}\n\nPlease ensure the module file exists and is accessible.`;
   }
-  
+
   const teachBackPrompt = extractTeachBackPrompt(learnMarkdown);
   const scenario = getScenarioForModule(entry.moduleId);
+  const practiceSpec = loadPracticeSpec(entry.moduleId);
   if (scenario) {
     const lintIssues = lintScenarioDefinition(scenario);
     if (lintIssues.length) {
@@ -112,6 +115,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
       teachBackPrompt={teachBackPrompt}
       nextModuleId={nextModuleId}
       scenario={scenario}
+      practiceSpec={practiceSpec}
     />
   );
 }

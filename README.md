@@ -1,46 +1,33 @@
-# GHL Workflow Mastery — Build Document Set (Markdown)
+# StrategixAI GHL Operations Training (Week 2)
 **Date:** January 2026
 
-This folder contains the complete markdown document set to enable an AI coding agent (Build AI) to implement:
+This repository contains an interactive onboarding course specifically designed for StrategixAI staff to master GoHighLevel (GHL) operations.
 
-1) A **20–25 module** progressive training course: learn → build → validate → simulate → teach-back  
-2) A **GHL-like mock workflow builder** (drag/drop graph)  
-3) An **invariant-based validator** (multiple correct solutions supported)  
-4) A **simulation runner** (timeline logs + executed nodes + branch decisions)  
-5) An **AI co-pilot** (concept coach, build coach, debug coach, teach-back coach)
+## Course Overview (Week 2)
+The curriculum focuses on operational excellence, data hygiene, and proactive CRM management.
 
-## How to use these docs
-- Start with `00_PRD.md` and `01_Architecture.md` to implement the platform.
-- Implement the node catalog described in `03_Node_Catalog.md`.
-- Implement scenario ingestion per `04_Scenarios_and_Authoring.md`.
-- Implement validation per `05_Validation_Engine.md` and simulation per `06_Simulation_Engine.md`.
-- Implement the AI co-pilot per `07_AI_CoPilot.md`.
-- Populate the course modules using the module files in `/modules/`.
-  - Each module contains:
-    - lesson content outline
-    - lab challenge spec
-    - allowed nodes
-    - invariants
-    - test cases
-    - hints ladder
-    - teach-back prompt + rubric
-    - “Real GHL mapping” notes
+1. **L2.1: GHL Orientation & Navigation** — Mastery of the interface and location awareness.
+2. **L2.2: Contacts & Data Hygiene** — Maintaining the single source of truth.
+3. **L2.3: Conversations & Inbox Operations** — Multi-channel communication standards.
+4. **L2.4: Opportunities & Pipelines** — Revenue pipeline execution.
+5. **L2.5: Tasks & Execution Engine** — Managing operational tasks effectively.
+6. **L2.6: Social Planner** — Content scheduling and brand management.
+7. **Capstone Lab** — Week 2 Practical Verification.
 
-## File index
-- `00_PRD.md` — Product requirements and acceptance criteria
-- `01_Architecture.md` — Technical architecture (no code) + data flow
-- `02_Curriculum_Index.md` — Module sequence and difficulty ramp
-- `03_Node_Catalog.md` — Node types + config schemas (MVP + V1 expansion)
-- `04_Scenarios_and_Authoring.md` — Scenario definition schema + authoring rules
-- `05_Validation_Engine.md` — Invariant-based validation design + rule types
-- `06_Simulation_Engine.md` — Event-driven simulation design + timeline logs
-- `07_AI_CoPilot.md` — Co-pilot modes, hint ladder, context injection
-- `08_UX_UI_Spec.md` — UX/UI requirements for the course + builder
-- `09_Rubrics_and_Review.md` — Teach-back rubric + reviewer workflow
-- `10_Glossary.md` — Beginner-friendly workflow terminology
-- `/modules/` — Module content specs (25 modules, progressive)
+## Core Features
+1. **Interactive Lessons** — Progressive Markdown-based lessons with clear outcomes and vocabulary.
+2. **Teach-back Requirements** — Learners must explain the concepts in their own words to verify mastery.
+3. **AI Co-pilot** — An embedded mentor to help learners through tough spots and coach their teach-backs.
+4. **StrategixAI Standards** — Integrated company-wide standards for every operation.
 
-## Non-goals (MVP)
-- No real sending of SMS/email.
-- No complete 1:1 replication of every GHL node (catalog is curated but expandable).
-- No agency multi-tenant user management.
+## File Index
+- `00_PRD.md` — Product and Course requirements.
+- `02_Curriculum_Index.md` — Detailed module list and difficulty levels.
+- `/modules/` — Lesson content files.
+- `src/` — Next.js application source code.
+- `src/data/moduleManifest.json` — The curriculum configuration file.
+
+## Getting Started
+1. Install dependencies: `npm install`
+2. Run locally: `npm run dev`
+3. Access at: `http://localhost:3000`

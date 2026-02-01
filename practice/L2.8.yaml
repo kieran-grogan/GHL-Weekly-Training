@@ -1,0 +1,75 @@
+moduleId: "L2.8"
+practiceType: "capstone"
+title: "Week 2 Practical Lab and Teach-back"
+description: "Complete all week 2 artifacts and prepare your final teach-back presentation"
+
+capstoneArtifacts:
+  - id: "client-workflows"
+    name: "Client Workflow Portfolio"
+    description: "Collection of at least 3 complete client-ready workflows"
+    checklistItems:
+      - id: "workflow-1"
+        description: "Lead Capture & Nurture workflow (fully documented)"
+        requiredEvidence: []
+      
+      - id: "workflow-2"
+        description: "Customer Onboarding workflow (fully documented)"
+        requiredEvidence: []
+      
+      - id: "workflow-3"
+        description: "Re-engagement workflow (fully documented)"
+        requiredEvidence: []
+  
+  - id: "documentation-package"
+    name: "Complete Documentation Package"
+    description: "Professional documentation for all workflows and systems"
+    checklistItems:
+      - id: "process-docs"
+        description: "Process documentation for each workflow"
+        requiredEvidence: []
+      
+      - id: "user-guides"
+        description: "End-user guides for client handoff"
+        requiredEvidence: []
+      
+      - id: "troubleshooting"
+        description: "Troubleshooting guide and FAQ"
+        requiredEvidence: []
+  
+  - id: "implementation-plan"
+    name: "Client Implementation Plan"
+    description: "Step-by-step implementation plan for a real client scenario"
+    checklistItems:
+      - id: "discovery-questions"
+        description: "List of discovery questions for client intake"
+        requiredEvidence: []
+      
+      - id: "timeline"
+        description: "Detailed implementation timeline"
+        requiredEvidence: []
+      
+      - id: "success-metrics"
+        description: "Defined success metrics and KPIs"
+        requiredEvidence: []
+
+teachBackAgenda:
+  - topic: "GHL Workflow Strategy"
+    duration: "10 minutes"
+    keyPoints:
+      - "When to use workflows vs manual processes"
+      - "Common workflow patterns and best practices"
+      - "How to scope workflow projects for clients"
+  
+  - topic: "Technical Implementation"
+    duration: "15 minutes"
+    keyPoints:
+      - "Walk through one complete workflow build"
+      - "Explain decision logic and branching"
+      - "Demonstrate testing and validation process"
+  
+  - topic: "Client Communication"
+    duration: "10 minutes"
+    keyPoints:
+      - "How to explain workflows to non-technical clients"
+      - "Setting expectations for automation"
+      - "Handling common client objections"

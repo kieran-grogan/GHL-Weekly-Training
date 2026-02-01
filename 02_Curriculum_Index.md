@@ -1,42 +1,23 @@
-# 02 — Curriculum Index (25 Modules)
+# 02 — StrategixAI GHL Operations Training (Week 2 - Notion Aligned)
 
-## Phase 1 — Foundations (M01–M05)
-- M01: Contact Created → Welcome SMS (Hello World)
-- M02: New Contact → Tag + Email + SMS (configuration discipline)
-- M03: Tag Added → Notify + Task (tags as events)
-- M04: Form Submitted → Tag + Field Update + Task + Notify (intake)
-- M05: Field Updates as Data Modeling (prep for branching)
+## Phase 1 — Platform & Client Context (L2.1–L2.2)
+- L2.1: Complete GHL Orientation
+- L2.2: Review: How We Use GHL for Clients
 
-## Phase 2 — Branching + Guardrails (M06–M10)
-- M06: If/Else guardrail: phone exists → SMS else Email
-- M07: If/Else segmentation: lead_source Facebook vs Google
-- M08: Multi-branch segmentation: FB vs Google vs Other
-- M09: Do-not-contact guardrail: stop path
-- M10: Consent gating for SMS with fallback path
+## Phase 2 — Marketing Execution (L2.3–L2.4)
+- L2.3: Social Media Planner Deep Dive
+- L2.4: Master Social Media Planner CSV
 
-## Phase 3 — Sequences + Timing (M11–M15)
-- M11: Timed sequence: Email → Wait → Follow-up
-- M12: No-response follow-up using responded tag
-- M13: Response Handler workflow + stopping nurture (multi-workflow)
-- M14: Appointment Scheduled → confirm + stop nurture
-- M15: Appointment reminders + cancel guardrail (advanced waits)
+## Phase 3 — Systems & Workflows (L2.5–L2.6)
+- L2.5: Build Functional Customer Support Process
+- L2.6: Replicate Strategix Pets Workflow
 
-## Phase 4 — Pipeline + Ops (M16–M18)
-- M16: Pipeline stage change → internal task + notify
-- M17: Stage “Won” → onboarding steps + ops handoff
-- M18: Stale lead reactivation (wait + branch)
+## Phase 4 — Practical Application (L2.7–L2.8)
+- L2.7: Shadow Client Task Checklist
+- L2.8: Week 2 Practical Lab and Teachback
 
-## Phase 5 — Systems + Micro-workflows (M19–M23)
-- M19: Router workflow: intake → route tags + missing info path
-- M20: Micro-workflow: FB nurture flow (tag-triggered)
-- M21: Micro-workflow: General nurture flow (tag-triggered)
-- M22: Micro-workflow: Booking assist + escalation
-- M23: Webhook outbound integration pattern
-
-## Phase 6 — Advanced Ops + Capstone (M24–M25)
-- M24: Scheduler daily ops (contactless workflow)
-- M25: Capstone: Full lifecycle automation system (multi-workflow)
-
-## Guaranteed progression
-Each module introduces ONE main new difficulty dimension:
-- new node type OR new pattern OR new architecture concept
+## StrategixAI Standard
+1. **Location First.** Verify sub-account before any action.
+2. **Safety First.** Duplicate workflows before editing.
+3. **Log Everything.** Capture decisions and changes in notes.
+4. **Clean Content.** Mastery of the Social Planner and CSV formatting.

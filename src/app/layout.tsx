@@ -1,8 +1,9 @@
 import "./globals.css";
+import "./practice.css";
 import type { Metadata } from "next";
 import { Space_Grotesk, Fraunces } from "next/font/google";
 import { AppShell } from "@/components/AppShell";
-import { moduleManifest } from "@/data/moduleManifest";
+import { getModuleManifest, getWeekManifests } from "@/data/moduleManifest";
 
 const bodyFont = Space_Grotesk({
   subsets: ["latin"],
@@ -26,10 +27,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const manifest = getModuleManifest();
+  const weeks = getWeekManifests();
+  
   return (
     <html lang="en">
       <body className={`${bodyFont.variable} ${displayFont.variable}`}>
-        <AppShell manifest={moduleManifest}>{children}</AppShell>
+        <AppShell manifest={manifest} weeks={weeks}>{children}</AppShell>
       </body>
     </html>
   );

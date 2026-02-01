@@ -1,0 +1,24 @@
+moduleId: "L2.4"
+practiceType: "deliverable"
+title: "Master Social Media Planner CSV"
+description: "Create and submit your customized social media planner CSV based on the template"
+
+deliverables:
+  - id: "csv-template"
+    name: "Social Media Planner CSV"
+    description: "Fill out the complete social media planner with at least 10 posts across different platforms"
+    template: |
+      Date,Platform,Post Content,Hashtags,Media URL,Status
+      2024-02-01,Facebook,Example post content,#hashtag1 #hashtag2,https://...,scheduled
+    fileTypes:
+      - ".csv"
+      - ".xlsx"
+      - "Google Sheets link"
+  
+  - id: "content-calendar"
+    name: "Content Calendar Screenshot"
+    description: "Screenshot of your content calendar showing the planned posts"
+    fileTypes:
+      - ".png"
+      - ".jpg"
+      - "Loom video"

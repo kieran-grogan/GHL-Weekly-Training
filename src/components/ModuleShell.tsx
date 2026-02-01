@@ -13,8 +13,13 @@ import { WorkflowBuilder } from "@/components/WorkflowBuilder";
 import { ValidationPanel } from "@/components/ValidationPanel";
 import { SimulationPanel } from "@/components/SimulationPanel";
 import { GlossaryPanel } from "@/components/GlossaryPanel";
+import { ChecklistPractice } from "@/components/ChecklistPractice";
+import { DeliverablePractice } from "@/components/DeliverablePractice";
+import { SystemBuildPractice } from "@/components/SystemBuildPractice";
+import { CapstonePractice } from "@/components/CapstonePractice";
 import { MIN_TEACH_BACK_WORDS, TEACH_BACK_RUBRIC } from "@/lib/rubric";
 import { GHL_TERM_SUMMARY, getGhlTerm, getNodeDisplayName } from "@/lib/ghlTerms";
+import type { PracticeSpec } from "@/lib/practiceTypes";
 
 type ModuleShellProps = {
   moduleId: string;
@@ -24,6 +29,7 @@ type ModuleShellProps = {
   teachBackPrompt: string;
   nextModuleId?: string;
   scenario?: ScenarioDefinition | null;
+  practiceSpec?: PracticeSpec | null;
 };
 
 type TabKey = "Learn" | "Build" | "Validate" | "Simulate" | "Teach-back";
@@ -41,13 +47,22 @@ type ExpectedFieldHint = {
 
 type ExpectedFieldHintsByNode = Partial<Record<NodeType, Record<string, ExpectedFieldHint>>>;
 
-const tabs: { key: TabKey; label: string; helper: string }[] = [
-  { key: "Learn", label: "Learn", helper: "Read this first" },
-  { key: "Build", label: "Build", helper: "Practice" },
-  { key: "Validate", label: "Validate", helper: "Check my work" },
-  { key: "Simulate", label: "Simulate", helper: "Test run" },
-  { key: "Teach-back", label: "Teach-back", helper: "Explain in your words" }
-];
+const getTabs = (hasScenario: boolean): { key: TabKey; label: string; helper: string }[] => {
+  const baseTabs: { key: TabKey; label: string; helper: string }[] = [
+    { key: "Learn", label: "Learn", helper: "Read this first" }
+  ];
+
+  if (hasScenario) {
+    baseTabs.push(
+      { key: "Build", label: "Build", helper: "Practice" },
+      { key: "Validate", label: "Validate", helper: "Check my work" },
+      { key: "Simulate", label: "Simulate", helper: "Test run" }
+    );
+  }
+
+  baseTabs.push({ key: "Teach-back", label: "Teach-back", helper: "Explain in your words" });
+  return baseTabs;
+};
 
 const getAllowedNodeTypes = (scenario?: ScenarioDefinition | null): NodeType[] | undefined => {
   if (!scenario || "workflows" in scenario) {
@@ -343,10 +358,10 @@ const MultiWorkflowBuilder = ({
   );
   const allowedTypes = activeWorkflow
     ? [
-        ...activeWorkflow.scenario.allowedNodes.triggers,
-        ...activeWorkflow.scenario.allowedNodes.actions,
-        ...activeWorkflow.scenario.allowedNodes.logic
-      ]
+      ...activeWorkflow.scenario.allowedNodes.triggers,
+      ...activeWorkflow.scenario.allowedNodes.actions,
+      ...activeWorkflow.scenario.allowedNodes.logic
+    ]
     : undefined;
 
   return (
@@ -392,7 +407,8 @@ export const ModuleShell = ({
   learnMarkdown,
   teachBackPrompt,
   nextModuleId,
-  scenario
+  scenario,
+  practiceSpec
 }: ModuleShellProps) => {
   const [activeTab, setActiveTab] = useState<TabKey>("Learn");
   const [focusNodeId, setFocusNodeId] = useState<string | null>(null);
@@ -419,6 +435,7 @@ export const ModuleShell = ({
 
   const canSubmitTeachBack = wordCount >= MIN_TEACH_BACK_WORDS;
   const microLessonCards = useMemo(() => buildMicroLessonCards(scenario), [scenario]);
+  const tabs = useMemo(() => getTabs(Boolean(scenario)), [scenario]);
   const activeTabIndex = Math.max(0, tabs.findIndex((tab) => tab.key === activeTab));
   const isBundle = Boolean(scenario && "workflows" in scenario);
   const expectedFieldHints = useMemo(
@@ -589,33 +606,116 @@ export const ModuleShell = ({
         {activeTab === "Build" && (
           <div className="card">
             <h2 className="card-title">Practice</h2>
-            <p className="muted">
-              Add steps and fill the required fields. We connect steps for you.
-            </p>
-            {"workflows" in (scenario ?? {}) ? (
-              <MultiWorkflowBuilder
-                moduleId={moduleId}
-                scenario={scenario}
-                focusNodeId={focusNodeId}
-                focusFieldKey={focusFieldKey}
-                singleTriggerMode={singleTriggerMode}
-                onReadyForCheckChange={setBuildReady}
-                validationIssues={validationIssues}
-                onFixNode={handleFixNode}
-              />
-            ) : (
-              <WorkflowBuilder
-                moduleId={moduleId}
-                allowedNodeTypes={getAllowedNodeTypes(scenario)}
-                focusNodeId={focusNodeId}
-                focusFieldKey={focusFieldKey}
-                singleTriggerMode={singleTriggerMode}
-                onReadyForCheckChange={setBuildReady}
-                validationIssues={validationIssues}
-                onFixNode={handleFixNode}
-                expectedFieldHints={expectedFieldHints}
-              />
+            {(() => {
+              // If there's a practice spec, render based on practice type
+              if (practiceSpec) {
+                switch (practiceSpec.practiceType) {
+                  case "checklist":
+                    return (
+                      <>
+                        <p className="muted">{practiceSpec.description || "Complete all checklist items with required evidence."}</p>
+                        <ChecklistPractice
+                          moduleId={moduleId}
+                          items={practiceSpec.checklistItems || []}
+                          onComplete={setBuildReady}
+                        />
+                      </>
+                    );
+
+                  case "deliverable":
+                    return (
+                      <>
+                        <p className="muted">{practiceSpec.description || "Submit your deliverables for this module."}</p>
+                        <DeliverablePractice
+                          moduleId={moduleId}
+                          deliverables={practiceSpec.deliverables || []}
+                          onComplete={setBuildReady}
+                        />
+                      </>
+                    );
+
+                  case "system_build":
+                    return (
+                      <>
+                        <p className="muted">{practiceSpec.description || "Build a complete system with multiple components."}</p>
+                        <SystemBuildPractice
+                          moduleId={moduleId}
+                          parts={practiceSpec.systemParts || []}
+                          onComplete={setBuildReady}
+                        />
+                      </>
+                    );
+
+                  case "capstone":
+                    return (
+                      <>
+                        <p className="muted">{practiceSpec.description || "Complete all capstone artifacts and prepare your teach-back."}</p>
+                        <CapstonePractice
+                          moduleId={moduleId}
+                          artifacts={practiceSpec.capstoneArtifacts || []}
+                          teachBackAgenda={practiceSpec.teachBackAgenda || []}
+                          onComplete={setBuildReady}
+                        />
+                      </>
+                    );
+
+                  case "workflow_build":
+                  default:
+                    // Fall through to workflow builder below
+                    break;
+                }
+              }
+
+              // Default: Render workflow builder (if scenario exists OR practice type is workflow_build)
+              if (!practiceSpec || practiceSpec.practiceType === "workflow_build") {
+                return (
+                  <>
+                    <p className="muted">
+                      Add steps and fill the required fields. We connect steps for you.
+                    </p>
+                    {"workflows" in (scenario ?? {}) ? (
+                      <MultiWorkflowBuilder
+                        moduleId={moduleId}
+                        scenario={scenario}
+                        focusNodeId={focusNodeId}
+                        focusFieldKey={focusFieldKey}
+                        singleTriggerMode={singleTriggerMode}
+                        onReadyForCheckChange={setBuildReady}
+                        validationIssues={validationIssues}
+                        onFixNode={handleFixNode}
+                      />
+                    ) : (
+                      <WorkflowBuilder
+                        moduleId={moduleId}
+                        allowedNodeTypes={getAllowedNodeTypes(scenario)}
+                        focusNodeId={focusNodeId}
+                        focusFieldKey={focusFieldKey}
+                        singleTriggerMode={singleTriggerMode}
+                        onReadyForCheckChange={setBuildReady}
+                        validationIssues={validationIssues}
+                        onFixNode={handleFixNode}
+                        expectedFieldHints={expectedFieldHints}
+                      />
+                    )}
+                  </>
+                );
+              }
+
+              return null;
+            })()}
+            
+            {/* Stop Condition Callout */}
+            {practiceSpec && (
+              <div className="callout callout-warning" style={{ marginTop: "24px" }}>
+                <strong>If you are stuck for more than 15 minutes:</strong>
+                <ol style={{ marginTop: "8px", marginBottom: "0", paddingLeft: "20px" }}>
+                  <li>Write what you tried (3 bullets).</li>
+                  <li>Screenshot the error / the screen you're on.</li>
+                  <li>Ask for help with a <strong>specific question</strong>, not "it's broken."</li>
+                </ol>
+              </div>
             )}
+            
             <div className="flow-actions">
               <button
                 className="btn btn-secondary"

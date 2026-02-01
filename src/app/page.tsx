@@ -1,6 +1,9 @@
 import { CourseHome } from "@/components/CourseHome";
-import { moduleManifest } from "@/data/moduleManifest";
+import { getModuleManifest, getWeekManifests } from "@/data/moduleManifest";
 
 export default function HomePage() {
-  return <CourseHome manifest={moduleManifest} />;
+  const manifest = getModuleManifest();
+  const weeks = getWeekManifests();
+  
+  return <CourseHome manifest={manifest} weeks={weeks} allModules={manifest} />;
 }

@@ -1,0 +1,95 @@
+moduleId: "L2.8"
+practiceType: "capstone"
+title: "Week 2 Capstone & Teachback"
+description: "Submit the artifacts below. Explanations without artifacts do not pass."
+
+capstoneArtifacts:
+  - id: "orientation-proof"
+    name: "Orientation Proof"
+    description: "Evidence of correct location/timezone and navigation competency"
+    checklistItems:
+      - id: "location-timezone-screenshot"
+        description: "Screenshot: correct Location + Timezone"
+        requiredEvidence:
+          - "screenshot"
+      - id: "navigation-loom"
+        description: "Loom (60-90s): show Contacts / Conversations / Opportunities / Social Planner / Workflows"
+        requiredEvidence:
+          - "loom"
+  
+  - id: "social-planner-demo"
+    name: "Social Planner Demo"
+    description: "Demonstrate social media planning and scheduling capability"
+    checklistItems:
+      - id: "planner-queue-screenshot"
+        description: "Screenshot: Social Planner queue/calendar showing scheduled posts"
+        requiredEvidence:
+          - "screenshot"
+      - id: "manual-posts-loom"
+        description: "Loom (2-3 min): schedule 2 manual posts on different days/times"
+        requiredEvidence:
+          - "loom"
+      - id: "csv-import-optional"
+        description: "If CSV is used this week: screenshot of successful CSV import + at least 5 posts visible in queue"
+        requiredEvidence:
+          - "screenshot"
+  
+  - id: "support-intake-path"
+    name: "Support Intake Path (System Proof)"
+    description: "Demonstrate complete support ticket creation and assignment workflow"
+    checklistItems:
+      - id: "support-pipeline-screenshot"
+        description: "Screenshot: Support pipeline stages"
+        requiredEvidence:
+          - "screenshot"
+      - id: "test-ticket-screenshot"
+        description: "Screenshot: a test support ticket/opportunity created and assigned"
+        requiredEvidence:
+          - "screenshot"
+      - id: "intake-workflow-loom"
+        description: "Loom (2-4 min): submit intake form → ticket created → assignment + task/notification fired"
+        requiredEvidence:
+          - "loom"
+  
+  - id: "strategix-pets-workflow-fix"
+    name: "Strategix Pets Workflow Fix Proof"
+    description: "Evidence of workflow debugging and fix implementation"
+    checklistItems:
+      - id: "bad-step-screenshot"
+        description: "Screenshot: the bad/stuck step you fixed"
+        requiredEvidence:
+          - "screenshot"
+      - id: "execution-proof"
+        description: "Screenshot or Loom: execution log / contact timeline showing a test contact moved past the stuck step"
+        requiredEvidence:
+          - "screenshot"
+          - "loom"
+      - id: "change-log"
+        description: "Text: 5-10 line change log (what changed + why + how tested)"
+        requiredEvidence:
+          - "text"
+  
+  - id: "teach-back-prep"
+    name: "Teach-back Prep"
+    description: "Prepare your Week 2 teach-back reflection"
+    checklistItems:
+      - id: "learned-this-week"
+        description: "5 bullets: what I learned this week"
+        requiredEvidence:
+          - "text"
+      - id: "failure-modes"
+        description: "3 bullets: top failure modes I can now diagnose"
+        requiredEvidence:
+          - "text"
+      - id: "still-confused"
+        description: "3 bullets: what still confuses me / what I need clarified"
+        requiredEvidence:
+          - "text"
+
+teachBackAgenda:
+  - topic: "Week 2 Reflection"
+    duration: "10 minutes"
+    keyPoints:
+      - "What you learned this week"
+      - "Failure modes you can now diagnose"
+      - "What still needs clarification"

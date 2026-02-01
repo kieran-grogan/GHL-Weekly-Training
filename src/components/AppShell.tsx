@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import type { ModuleManifestEntry } from "@/data/moduleManifest";
+import type { ModuleManifestEntry } from "@/data/moduleManifest.types";
+import type { WeekManifest } from "@/lib/weekLoader";
 import { ProgressProvider } from "@/contexts/ProgressContext";
 import { CopilotProvider } from "@/contexts/CopilotContext";
 import { Sidebar } from "@/components/Sidebar";
@@ -10,10 +11,11 @@ import { CopilotLauncher } from "@/components/CopilotLauncher";
 
 type AppShellProps = {
   manifest: ModuleManifestEntry[];
+  weeks?: WeekManifest[];
   children: ReactNode;
 };
 
-export const AppShell = ({ manifest, children }: AppShellProps) => {
+export const AppShell = ({ manifest, weeks = [], children }: AppShellProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
     <ProgressProvider manifest={manifest}>
@@ -21,6 +23,7 @@ export const AppShell = ({ manifest, children }: AppShellProps) => {
         <div className={`app-shell ${sidebarOpen ? "app-shell--sidebar-open" : ""}`}>
           <Sidebar
             manifest={manifest}
+            weeks={weeks}
             isOpen={sidebarOpen}
             onClose={() => setSidebarOpen(false)}
           />

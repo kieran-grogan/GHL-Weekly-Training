@@ -384,6 +384,20 @@ export const WorkflowBuilder = ({
     markActive();
   };
 
+  const handleReset = () => {
+    if (
+      window.confirm(
+        "Are you sure you want to reset this workflow? This will delete all steps and connections."
+      )
+    ) {
+      setNodes([]);
+      setEdges([]);
+      setSelectedNodeId(null);
+      setCoachMessage("Workflow reset. Start fresh!");
+      markActive();
+    }
+  };
+
   const warnings = useMemo(() => getBuilderWarnings(nodes, edges), [edges, nodes]);
   const testIssues = useMemo(
     () =>
@@ -422,8 +436,8 @@ export const WorkflowBuilder = ({
   const selectedMissingFields =
     selectedNode && selectedDefinition
       ? selectedRequiredFields.filter((field) =>
-          isMissingValue(selectedNode.config[field.key])
-        )
+        isMissingValue(selectedNode.config[field.key])
+      )
       : [];
 
   const movePlan = useMemo<MovePlan | null>(() => {
@@ -462,24 +476,24 @@ export const WorkflowBuilder = ({
 
     const canMoveUp = Boolean(
       prev &&
-        prev.data.kind === "action" &&
-        prevOutgoing.length === 1 &&
-        prevIncoming.length <= 1 &&
-        prevPrevEdge &&
-        !hasEdgeHandles(prevPrevEdge) &&
-        (!nextEdge || !hasEdgeHandles(nextEdge))
+      prev.data.kind === "action" &&
+      prevOutgoing.length === 1 &&
+      prevIncoming.length <= 1 &&
+      prevPrevEdge &&
+      !hasEdgeHandles(prevPrevEdge) &&
+      (!nextEdge || !hasEdgeHandles(nextEdge))
     );
 
     const canMoveDown = Boolean(
       next &&
-        next.data.kind === "action" &&
-        prevEdge &&
-        !hasEdgeHandles(prevEdge) &&
-        nextIncoming.length === 1 &&
-        nextOutgoing.length <= 1 &&
-        nextEdge &&
-        !hasEdgeHandles(nextEdge) &&
-        (!nextNextEdge || !hasEdgeHandles(nextNextEdge))
+      next.data.kind === "action" &&
+      prevEdge &&
+      !hasEdgeHandles(prevEdge) &&
+      nextIncoming.length === 1 &&
+      nextOutgoing.length <= 1 &&
+      nextEdge &&
+      !hasEdgeHandles(nextEdge) &&
+      (!nextNextEdge || !hasEdgeHandles(nextNextEdge))
     );
 
     if (!canMoveUp && !canMoveDown && !reason) {
@@ -670,34 +684,34 @@ export const WorkflowBuilder = ({
         className={`test-issues test-issues--${position} test-issues--blink`}
       >
         <div className="test-issues-title">From your last check</div>
-            {testIssues.map((issue) => (
-              <div
-                key={`${issue.id}-${position}`}
-                className={`test-issue-card test-issue-card--${issue.level}`}
+        {testIssues.map((issue) => (
+          <div
+            key={`${issue.id}-${position}`}
+            className={`test-issue-card test-issue-card--${issue.level}`}
+          >
+            {issue.workflowTitle && (
+              <div className="test-issue-workflow">Workflow: {issue.workflowTitle}</div>
+            )}
+            <div className="test-issue-what">{issue.what}</div>
+            <div className="test-issue-why">Why: {issue.why}</div>
+            <div className="test-issue-next">Fix: {issue.next}</div>
+            {issue.nodeId && (
+              <button
+                className="btn btn-secondary btn-inline"
+                onClick={() => {
+                  if (onFixNode) {
+                    onFixNode(issue.nodeId, issue.fieldKey);
+                  } else {
+                    setSelectedNodeId(issue.nodeId ?? null);
+                    setActivePanel("settings");
+                  }
+                }}
               >
-                {issue.workflowTitle && (
-                  <div className="test-issue-workflow">Workflow: {issue.workflowTitle}</div>
-                )}
-                <div className="test-issue-what">{issue.what}</div>
-                <div className="test-issue-why">Why: {issue.why}</div>
-                <div className="test-issue-next">Fix: {issue.next}</div>
-                {issue.nodeId && (
-                  <button
-                    className="btn btn-secondary btn-inline"
-                    onClick={() => {
-                      if (onFixNode) {
-                        onFixNode(issue.nodeId, issue.fieldKey);
-                      } else {
-                        setSelectedNodeId(issue.nodeId ?? null);
-                        setActivePanel("settings");
-                      }
-                    }}
-                  >
-                    {issue.fieldKey ? "Fix this field" : "Fix this step"}
-                  </button>
-                )}
-              </div>
-            ))}
+                {issue.fieldKey ? "Fix this field" : "Fix this step"}
+              </button>
+            )}
+          </div>
+        ))}
       </div>
     );
   };
@@ -712,17 +726,26 @@ export const WorkflowBuilder = ({
               Follow the steps. The next step lights up when you are ready.
             </div>
           </div>
-          <label className="guide-toggle">
-            <input
-              type="checkbox"
-              checked={guideMode}
-              onChange={(event) => {
-                setGuideMode(event.target.checked);
-                markActive();
-              }}
-            />
-            <span>{guideMode ? "On" : "Off"}</span>
-          </label>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <button
+              className="btn btn-secondary btn-compact"
+              onClick={handleReset}
+              style={{ marginTop: 0 }}
+            >
+              Reset workflow
+            </button>
+            <label className="guide-toggle">
+              <input
+                type="checkbox"
+                checked={guideMode}
+                onChange={(event) => {
+                  setGuideMode(event.target.checked);
+                  markActive();
+                }}
+              />
+              <span>{guideMode ? "On" : "Off"}</span>
+            </label>
+          </div>
         </div>
         {guideMode && (
           <div className="guide-steps">
@@ -737,9 +760,8 @@ export const WorkflowBuilder = ({
               return (
                 <div
                   key={step.id}
-                  className={`guide-step guide-step--${status} ${
-                    shouldBlink ? "guide-step--blink" : ""
-                  }`}
+                  className={`guide-step guide-step--${status} ${shouldBlink ? "guide-step--blink" : ""
+                    }`}
                 >
                   <div className="guide-step-label">{step.label}</div>
                   <div className="guide-step-helper">{step.helper}</div>
@@ -767,13 +789,13 @@ export const WorkflowBuilder = ({
       </div>
 
       <div className="builder" data-panel={activePanel}>
-      <div className="builder-panel builder-panel--left">
-        <NodePalette
-          allowedTypes={allowedNodeTypes}
-          onAddNode={addNode}
-          getDisabledReason={getDisabledReason}
-        />
-      </div>
+        <div className="builder-panel builder-panel--left">
+          <NodePalette
+            allowedTypes={allowedNodeTypes}
+            onAddNode={addNode}
+            getDisabledReason={getDisabledReason}
+          />
+        </div>
         <div className="builder-canvas" onDrop={handleDrop} onDragOver={handleDragOver}>
           <ReactFlow
             nodes={nodes}
@@ -807,9 +829,8 @@ export const WorkflowBuilder = ({
                 return (
                   <div
                     key={step.id}
-                    className={`helper-step ${isActive ? "helper-step--active" : ""} ${
-                      shouldBlink ? "helper-step--blink" : ""
-                    }`}
+                    className={`helper-step ${isActive ? "helper-step--active" : ""} ${shouldBlink ? "helper-step--blink" : ""
+                      }`}
                   >
                     {step.label}
                   </div>
@@ -844,12 +865,12 @@ export const WorkflowBuilder = ({
                 </div>
               </div>
             )}
-          <div className="helper-next">
-            <div className="helper-label">Quick tips</div>
-            <div className="helper-text">
-              We connect steps for you. If you add If/Else, connect each branch.
+            <div className="helper-next">
+              <div className="helper-label">Quick tips</div>
+              <div className="helper-text">
+                We connect steps for you. If you add If/Else, connect each branch.
+              </div>
             </div>
-          </div>
           </div>
           <div className="builder-section" data-section="settings">
             <div className="section-title">Step settings</div>

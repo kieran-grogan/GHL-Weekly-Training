@@ -1,0 +1,31 @@
+moduleId: "L2.1"
+practiceType: "checklist"
+title: "Complete GHL Orientation"
+description: "Complete all orientation tasks and provide evidence of completion"
+
+checklistItems:
+  - id: "watch-ghl-overview"
+    description: "Watch the GHL Platform Overview video (15 minutes)"
+    requiredEvidence:
+      - "loom"
+      - "text"
+  
+  - id: "explore-dashboard"
+    description: "Explore your GHL dashboard and familiarize yourself with the main navigation"
+    requiredEvidence:
+      - "screenshot"
+  
+  - id: "review-workflows"
+    description: "Review the Workflows section and identify 3 existing workflows"
+    requiredEvidence:
+      - "text"
+  
+  - id: "test-contact-creation"
+    description: "Create a test contact in the CRM"
+    requiredEvidence:
+      - "screenshot"
+  
+  - id: "document-questions"
+    description: "Document 3 questions you have about the platform"
+    requiredEvidence:
+      - "text"

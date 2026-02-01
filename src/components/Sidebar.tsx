@@ -1,20 +1,30 @@
 "use client";
 
 import Link from "next/link";
-import type { ModuleManifestEntry } from "@/data/moduleManifest";
+import type { ModuleManifestEntry } from "@/data/moduleManifest.types";
+import type { WeekManifest } from "@/lib/weekLoader";
 import { useProgress } from "@/contexts/ProgressContext";
 
 type SidebarProps = {
   manifest: ModuleManifestEntry[];
+  weeks?: WeekManifest[];
   isOpen?: boolean;
   onClose?: () => void;
 };
 
-export const Sidebar = ({ manifest, isOpen, onClose }: SidebarProps) => {
+export const Sidebar = ({ manifest, weeks = [], isOpen, onClose }: SidebarProps) => {
   const { progress, ready } = useProgress();
   const completedCount = manifest.filter(
     (entry) => progress.modules[entry.moduleId]?.status === "completed"
   ).length;
+
+  // Group modules by week if weeks are available
+  const modulesByWeek = weeks.length > 0
+    ? weeks.map((week) => ({
+        week,
+        modules: manifest.filter((m) => m.weekNumber === week.weekNumber),
+      }))
+    : [{ week: null, modules: manifest }];
 
   return (
     <aside className={`sidebar ${isOpen ? "sidebar--open" : ""}`}>
@@ -43,38 +53,45 @@ export const Sidebar = ({ manifest, isOpen, onClose }: SidebarProps) => {
         {!ready && <div className="progress-note">Loading progress...</div>}
       </div>
 
-      <div className="sidebar-section">
-        <div className="sidebar-section-title">Modules</div>
-        <div className="module-list">
-          {manifest.map((entry) => {
-            const module = progress.modules[entry.moduleId];
-            const status = module?.status ?? "available";
-            const displayStatus = status === "locked" ? "available" : status;
-            const showModuleId = !entry.title.startsWith(entry.moduleId);
-            const linkClass = [
-              "module-link",
-              displayStatus === "completed" ? "module-link--completed" : ""
-            ]
-              .filter(Boolean)
-              .join(" ");
+      {modulesByWeek.map(({ week, modules }) => (
+        <div key={week?.weekNumber ?? "all"} className="sidebar-section">
+          {week && (
+            <div className="sidebar-section-title">
+              Week {week.weekNumber}: {week.weekTitle}
+            </div>
+          )}
+          {!week && <div className="sidebar-section-title">Modules</div>}
+          <div className="module-list">
+            {modules.map((entry) => {
+              const module = progress.modules[entry.moduleId];
+              const status = module?.status ?? "available";
+              const displayStatus = status === "locked" ? "available" : status;
+              const showModuleId = !entry.title.startsWith(entry.moduleId);
+              const linkClass = [
+                "module-link",
+                displayStatus === "completed" ? "module-link--completed" : ""
+              ]
+                .filter(Boolean)
+                .join(" ");
 
-            return (
-              <Link
-                key={entry.moduleId}
-                href={`/modules/${entry.moduleId}`}
-                className={linkClass}
-                onClick={onClose}
-              >
-                {showModuleId && <span className="module-id">{entry.moduleId}</span>}
-                <span className="module-title">{entry.title}</span>
-                <span className={`status-badge status-badge--${displayStatus}`}>
-                  {displayStatus === "completed" ? "Done" : "Open"}
-                </span>
-              </Link>
-            );
-          })}
+              return (
+                <Link
+                  key={entry.moduleId}
+                  href={`/modules/${entry.moduleId}`}
+                  className={linkClass}
+                  onClick={onClose}
+                >
+                  {showModuleId && <span className="module-id">{entry.moduleId}</span>}
+                  <span className="module-title">{entry.title}</span>
+                  <span className={`status-badge status-badge--${displayStatus}`}>
+                    {displayStatus === "completed" ? "Done" : "Open"}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      ))}
     </aside>
   );
 };
